@@ -7,13 +7,13 @@ const BotStratery = new Schema({
         required: true,
         unique: true
     },
-    symbol_id: {
-        type: Schema.Types.ObjectId,
-        required:true,        
+    create_by: {
+        type: String,
+        default: "admin",
     },
-    account_id: {
-        type: Schema.Types.ObjectId,
-        required: true
+    sate: {
+        type: Number,
+        default: 0
     }
 })
 
@@ -23,14 +23,14 @@ const Symbol = new Schema({
         type: String,
         required: true,
         unique: true
-    },   
+    },
 })
 const Gruop = new Schema({
     name: {
         type: String,
         required: true,
         unique: true
-    },   
+    },
 })
 
 const FieldProperties = new Schema({
@@ -38,23 +38,23 @@ const FieldProperties = new Schema({
         type: String,
         required: true,
         unique: true
-    },   
+    },
     aliases: {
         type: String,
         required: true,
-        default:""
-    },  
+        default: ""
+    },
     description: {
         type: String,
         required: true,
-        default:""
-    }, 
+        default: ""
+    },
     // 0: input text, 1: combobox
-    type_input:{
+    type_input: {
         type: Number,
         required: true,
         default: 0
-    } 
+    }
 })
 module.exports = {
     BotStratery: mongoose.model("BotStratery", BotStratery, "BotStratery"),
