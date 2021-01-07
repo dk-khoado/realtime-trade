@@ -22,7 +22,8 @@ const Symbol = new Schema({
     name: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        set: (v)=> new String(v).toUpperCase()
     },
 })
 const Gruop = new Schema({
