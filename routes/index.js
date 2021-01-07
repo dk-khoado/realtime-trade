@@ -24,6 +24,10 @@ router.get("/bot-strategy",BotStrategy.getAll)
 router.post("/bot-strategy",BotStrategy.insert)
 router.put("/bot-strategy/:id",BotStrategy.update)
 
+router.get("/group", botSetting.getAll_gruop)
 router.post("/group", botSetting.create_group)
+
+router.get("/symbols", botSetting.getAll_symbols)
+router.post("/symbols", botSetting.create_symbols)
 
 module.exports = router;
