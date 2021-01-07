@@ -49,6 +49,42 @@ class BotSettingService extends ServiceBase {
             return new Response(true, error, "Error");
         }
     }
+
+    async getAll_fields() {
+        try {
+            let item = await FieldPropertiesModel.find({})
+            return new Response(false, item);
+        } catch (error) {
+            return new Response(true, error, "Error");
+        }
+    }
+
+    async create_fields(body) {
+        try {
+            let item = await FieldPropertiesModel.updateOne({name: body.name}, body, {upsert: true})
+            if (item) {
+                return new Response(false, item);
+            } else {
+                return new Response(true, {}, 'Something wrong happened');
+            }
+        } catch (error) {
+            return new Response(true, error, "Error");
+        }
+    }
+
+    async create_setting(body) {
+        try {
+            let item = await FieldPropertiesModel.find({})
+            
+            if (item) {
+                return new Response(false, item);
+            } else {
+                return new Response(true, {}, 'Something wrong happened');
+            }
+        } catch (error) {
+            return new Response(true, error, "Error");
+        }
+    }
 }
 
 module.exports = { BotSettingService }

@@ -23,7 +23,7 @@ const Symbol = new Schema({
         type: String,
         required: true,
         unique: true,
-        set: (v)=> new String(v).toUpperCase()
+        set: (v) => new String(v).toUpperCase()
     },
 })
 const Gruop = new Schema({
@@ -42,12 +42,10 @@ const FieldProperties = new Schema({
     },
     aliases: {
         type: String,
-        required: true,
         default: ""
     },
     description: {
         type: String,
-        required: true,
         default: ""
     },
     // 0: input text, 1: combobox
@@ -55,7 +53,21 @@ const FieldProperties = new Schema({
         type: Number,
         required: true,
         default: 0
-    }
+    },
+    default_value: {
+        type: String,
+        required: true
+    },
+    select_value: [{
+        value_type: {
+            type: String,
+            required: true
+        },
+        default_value: {
+            type: String,
+            required: true
+        }
+    }]
 })
 module.exports = {
     BotStratery: mongoose.model("BotStratery", BotStratery, "BotStratery"),

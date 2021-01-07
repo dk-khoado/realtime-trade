@@ -30,4 +30,12 @@ router.post("/group", botSetting.create_group)
 router.get("/symbols", botSetting.getAll_symbols)
 router.post("/symbols", botSetting.create_symbols)
 
+
+router.get("/fields", botSetting.getAll_fields)
+router.post("/fields", botSetting.create_fields)
+
+
+
+router.get("/bot-setting", botSetting.getAll_fields)
+router.post("/bot-setting", botSetting.create_setting)
 module.exports = router;
