@@ -48,6 +48,10 @@ const FieldProperties = new Schema({
         type: String,
         default: ""
     },
+    group_name: {
+        type: String,
+        required:true
+    },
     // 0: input text, 1: combobox
     type_input: {
         type: Number,

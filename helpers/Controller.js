@@ -34,6 +34,13 @@ module.exports = class {
         return false
     }
 
+    check_result_db(result) {
+        if (!result.isError()) {
+            return response(null, true, 201, result.getData(), result.getMessage())
+        } else {
+            return response(result.getData(), false, 201, null, result.getMessage())
+        }
+    }
     async getAll(req, res, next) {
         try {
             let result = await this.service.getAll({})

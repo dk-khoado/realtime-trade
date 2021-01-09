@@ -4,23 +4,31 @@ const Schema = mongoose.Schema
 const BotSetting = new Schema({
     gruop_id: {
         type: Schema.Types.ObjectId,
-        required: true,
+        default: null,
+        index:true
     },
-    field_id: {
-        type: Schema.Types.ObjectId,
-        required: true,
-    },
-    value: {
-        type: String,
-        required: true
-    },
+    fields: [
+        {
+            field_id: {
+                type: Schema.Types.ObjectId,
+                required: true,
+                index:true
+            },
+            value: {
+                type: String,
+                required: true
+            },
+        }
+    ],
     strategy_id: {
         type: Schema.Types.ObjectId,
-        required: true
+        required: true,
+        index:true
     },
     symbol_id: {
         type: Schema.Types.ObjectId,
-        required: true
+        required: true,
+        index:true
     }
 })
 

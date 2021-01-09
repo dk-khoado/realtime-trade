@@ -76,8 +76,27 @@ class BotSettingController extends Controller {
     }
 
     async create_setting(req, res, next) {
-        try {          
-            
+        try {
+            let result = await this.service.create_setting(req.body)
+            res.send(this.check_result_db(result))
+        } catch (error) {
+            res.send(response(error, false, 200, []))
+        }
+    }
+
+    async get_setting(req =this.request, res, next) {
+        try {
+            let result = await this.service.get_setting(req.params.stratery_id, req.params.symbol_id)
+            res.send(this.check_result_db(result))
+        } catch (error) {
+            res.send(response(error, false, 200, []))
+        }
+    }
+
+    async update_setting(req, res, next) {
+        try {
+            let result = await this.service.update_setting(req.body)
+            res.send(this.check_result_db(result))
         } catch (error) {
             res.send(response(error, false, 200, []))
         }
