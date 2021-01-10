@@ -184,27 +184,31 @@ class BotSettingService extends ServiceBase {
         }
     }
 
-    async create_setting(body) {
+    async update_setting(body) {
         try {
-            let item = await FieldPropertiesModel.find({})
-            let query = {
+            let item = await this.model.findOne({
                 "strategy_id": body.strategy_id,
                 "symbol_id": body.symbol_id,
-                "fields": [
-                ]
+            })
+            let query = {
+                "$set": {}
             }
-            for (let index = 0; index < item.length; index++) {
-                const element = item[index];
-                const index_field = body.fields.findIndex(v => v.field_id == element._id)
-                query.fields.push({
-                    field_id: element._id,
-                    value: index_field > -1 ? body.fields[index_field].value : element.default_value,
-                })
+            let options = {
+                arrayFilters: []
             }
+            for (let index = 0; index < body.fields.length; index++) {
+                const element = body.fields[index];
+                // const index_field = item.fields.findIndex(v => v.field_id == element.field_id)  
+                let elt = `index${index}`
+                let obj_option = {}
+                obj_option[`${elt}.field_id`] = element.field_id
+                query.$set[`fields.$[${elt}].value`] = element.value
+                options.arrayFilters.push(obj_option)
+            }          
             let result = await this.model.updateOne({
                 "strategy_id": body.strategy_id,
                 "symbol_id": body.symbol_id,
-            }, query)
+            }, query, options)
             if (result) {
                 return new Response(false, result);
             } else {

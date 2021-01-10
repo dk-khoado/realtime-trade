@@ -50,7 +50,7 @@ const FieldProperties = new Schema({
     },
     group_name: {
         type: String,
-        required:true
+        required: true
     },
     // 0: input text, 1: combobox
     type_input: {
@@ -73,9 +73,42 @@ const FieldProperties = new Schema({
         }
     }]
 })
+
+const BotVersion = new Schema({
+    version: {
+        type: Number,
+        unique:true
+    },
+    description: {
+        type: String,
+        default: ""
+    },
+})
+
+const BotReportError = new Schema({
+    reason: {
+        type: String,
+        required: true
+    },
+    title: {
+        type: String,
+        required: true
+    },
+    level: {
+        type: Number,
+        default: 0
+    },
+    bot_version_id:{
+        type:Schema.Types.ObjectId,
+        required:true
+    }
+})
+
 module.exports = {
     BotStratery: mongoose.model("BotStratery", BotStratery, "BotStratery"),
     Symbol: mongoose.model("Symbol", Symbol, "Symbol"),
     Gruop: mongoose.model("Gruop", Gruop, "Gruop"),
     FieldProperties: mongoose.model("FieldProperties", FieldProperties, "FieldProperties"),
+    BotVersion: mongoose.model("BotVersion", BotVersion, "BotVersion"),
+    BotReportError: mongoose.model("BotReportError", BotReportError, "BotReportError"),
 }
