@@ -61,7 +61,13 @@ class BotSettingService extends ServiceBase {
 
     async create_fields(body) {
         try {
-            let item = await FieldPropertiesModel.create(body)
+            let item = []
+            for (let index = 0; index < body.items.length; index++) {
+                const element = body.items[index];
+                let result = await FieldPropertiesModel.findOneAndUpdate({ name: element.name }, element,
+                    { new: true, upsert: true, setDefaultsOnInsert: true, runValidators: true })
+                item.push(result)
+            }
             if (item) {
                 return new Response(false, item);
             } else {
@@ -160,7 +166,7 @@ class BotSettingService extends ServiceBase {
                 foreignField: "_id",
                 as: "stratery"
             }
-        }, { $lookup: { from: "FieldProperties", localField: "fields.field_id", foreignField: "_id", as: "fields" } }, {
+        }, { $lookup: { from: "FieldProperties", localField: "fields.field_id", foreignField: "_id", as: "fields_info" } }, {
             $project: {
                 symbol: {
                     $arrayElemAt: [
@@ -174,7 +180,8 @@ class BotSettingService extends ServiceBase {
                         0
                     ]
                 },
-                fields: 1
+                fields: 1,
+                fields_info:1
             }
         }]);
         if (result.length > 0) {
@@ -184,6 +191,49 @@ class BotSettingService extends ServiceBase {
         }
     }
 
+    async get_setting(id) {
+        let result = await this.model.aggregate([{
+            $match: {
+                "_id": mongoose.Types.ObjectId(id)              
+            }
+        }, {
+            $lookup: {
+                from: "Symbol",
+                localField: "symbol_id",
+                foreignField: "_id",
+                as: "symbol_id"
+            }
+        }, {
+            $lookup: {
+                from: "BotStratery",
+                localField: "strategy_id",
+                foreignField: "_id",
+                as: "stratery"
+            }
+        }, { $lookup: { from: "FieldProperties", localField: "fields.field_id", foreignField: "_id", as: "fields_info" } }, {
+            $project: {
+                symbol: {
+                    $arrayElemAt: [
+                        "$symbol_id.name",
+                        0
+                    ]
+                },
+                stratery: {
+                    $arrayElemAt: [
+                        "$stratery.name",
+                        0
+                    ]
+                },
+                fields: 1,
+                fields_info:1,                
+            },
+        }]);
+        if (result.length > 0) {
+            return new Response(false, result[0]);
+        } else {
+            return new Response(true, {}, 'Something wrong happened');
+        }
+    }
     async update_setting(body) {
         try {
             let item = await this.model.findOne({
@@ -204,7 +254,7 @@ class BotSettingService extends ServiceBase {
                 obj_option[`${elt}.field_id`] = element.field_id
                 query.$set[`fields.$[${elt}].value`] = element.value
                 options.arrayFilters.push(obj_option)
-            }          
+            }
             let result = await this.model.updateOne({
                 "strategy_id": body.strategy_id,
                 "symbol_id": body.symbol_id,

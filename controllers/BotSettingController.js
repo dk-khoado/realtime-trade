@@ -6,6 +6,12 @@ const { Gruop, FieldProperties } = require("../models/bot_stratery");
 class BotSettingController extends Controller {
     constructor(service) {
         super(service);
+        const changeStream = this.service.model.watch();
+        changeStream.on('change', async(change) => {
+            console.log("change:", change.documentKey)
+            let doc = await this.service.get_setting(change.documentKey._id)
+            global.io.emit("update_config", this.check_result_db(doc))
+        });
     }
     async create_group(req, res, next) {
         try {

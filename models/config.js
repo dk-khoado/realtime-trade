@@ -4,6 +4,6 @@ module.exports = {
         port: process.env.MONGODB_ADDON_PORT || '27017',
         username: process.env.MONGODB_ADDON_USER || 'dev',
         password: process.env.MONGODB_ADDON_PASSWORD || 'khoathu148',
-        db_name: process.env.MONGODB_ADDON_DB || 'chitahfx'
+        db_name: process.env.MONGODB_ADDON_DB || 'chitahfx??replicaSet=rs0'
     }
 }

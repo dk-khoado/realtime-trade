@@ -15,18 +15,25 @@ var BotStrategyController = require("../controllers/BotStrategyController").BotS
 var BotStrategyService = require("../services/BotStrategyService").BotStrategyService
 var BotStrategyModel = require("../models/bot_stratery").BotStratery
 const BotStrategy = new BotStrategyController(new BotStrategyService(BotStrategyModel))
+
 /* GET home page. */
 router.get('/accounts', accountMT5.getAllAccount);
 router.post('/accounts', accountMT5.createAccount);
 router.put('/accounts/:id', accountMT5.update);
 
+//tạo chiến lượt
 router.get("/bot-strategy",BotStrategy.getAll)
+// {
+//     "name":"luot 11)1212"
+// }
 router.post("/bot-strategy",BotStrategy.insert)
 router.put("/bot-strategy/:id",BotStrategy.update)
 
+// client k quan tâm
 router.get("/group", botSetting.getAll_gruop)
 router.post("/group", botSetting.create_group)
 
+// client k quan tâm
 router.get("/symbols", botSetting.getAll_symbols)
 router.post("/symbols", botSetting.create_symbols)
 
@@ -35,8 +42,18 @@ router.get("/fields", botSetting.getAll_fields)
 router.post("/fields", botSetting.create_fields)
 
 
-
+//tạo setting cho chiên lượt
 router.get("/bot-setting/:stratery_id/symbol/:symbol_id", botSetting.get_setting)
+// {
+//     "strategy_id":"5ff4ab5a85f5770d581e4d28",
+//     "symbol_id":"5ff69a77a8eab931f42da9f4",
+//     "fields":[
+//         {
+//             "field_id":"",
+//             "value":""
+//         }
+//     ]
+// }
 router.post("/bot-setting", botSetting.create_setting)
 router.put("/bot-setting", botSetting.update_setting)
 module.exports = router;

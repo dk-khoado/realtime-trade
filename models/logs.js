@@ -6,8 +6,8 @@ const Logs = new Schema({
 
     colection_name: { type: String, required: true },
 
-    query: { type: String, required: true },
-    doc: { type: String, required: true },
+    query: { type: String, default:"" },
+    doc: { type: String, default:"" },
     createdAt: {
         type: Date,
         index: true,
