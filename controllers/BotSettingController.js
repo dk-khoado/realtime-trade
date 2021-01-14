@@ -9,7 +9,7 @@ class BotSettingController extends Controller {
         const changeStream = this.service.model.watch();
         changeStream.on('change', async(change) => {
             console.log("change:", change.documentKey)
-            let doc = await this.service.get_setting(change.documentKey._id)
+            let doc = await this.service.get_setting_byID(change.documentKey._id)
             global.io.emit("update_config", this.check_result_db(doc))
         });
     }

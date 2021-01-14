@@ -191,7 +191,7 @@ class BotSettingService extends ServiceBase {
         }
     }
 
-    async get_setting(id) {
+    async get_setting_byID(id) {
         let result = await this.model.aggregate([{
             $match: {
                 "_id": mongoose.Types.ObjectId(id)              
