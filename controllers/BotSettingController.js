@@ -1,13 +1,13 @@
 const Controller = require("../helpers/Controller");
 var response = require('../helpers/response');
 const { Gruop, FieldProperties } = require("../models/bot_stratery");
-
+const AccountMt5 = require("../services/AccountMT5Service").AccountMT5Service
 
 class BotSettingController extends Controller {
     constructor(service) {
         super(service);
         const changeStream = this.service.model.watch();
-        changeStream.on('change', async(change) => {
+        changeStream.on('change', async (change) => {
             console.log("change:", change.documentKey)
             let doc = await this.service.get_setting_byID(change.documentKey._id)
             global.io.emit("update_config", this.check_result_db(doc))
@@ -90,7 +90,7 @@ class BotSettingController extends Controller {
         }
     }
 
-    async get_setting(req =this.request, res, next) {
+    async get_setting(req = this.request, res, next) {
         try {
             let result = await this.service.get_setting(req.params.stratery_id, req.params.symbol_id)
             res.send(this.check_result_db(result))
@@ -102,6 +102,15 @@ class BotSettingController extends Controller {
     async update_setting(req, res, next) {
         try {
             let result = await this.service.update_setting(req.body)
+            res.send(this.check_result_db(result))
+        } catch (error) {
+            res.send(response(error, false, 200, []))
+        }
+    }
+
+    async get_setting_by_account(req, res, next) {
+        try {
+            let result = await this.service.get_setting_by_account(req.params.id)
             res.send(this.check_result_db(result))
         } catch (error) {
             res.send(response(error, false, 200, []))

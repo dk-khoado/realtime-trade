@@ -14,6 +14,10 @@ const AccountMt5 = new Schema({
     current_balance: {
         type: Number,
         default: 0
-    }
+    },
+    stratery_id: {
+        type: Schema.Types.ObjectId,
+        default: null
+    },
 })
 module.exports = mongoose.model("AccountMt5", AccountMt5, "AccountMt5")

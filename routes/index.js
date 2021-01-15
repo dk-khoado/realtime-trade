@@ -56,4 +56,6 @@ router.get("/bot-setting/:stratery_id/symbol/:symbol_id", botSetting.get_setting
 // }
 router.post("/bot-setting", botSetting.create_setting)
 router.put("/bot-setting", botSetting.update_setting)
+
+router.get("/bot-running/:id", botSetting.get_setting_by_account)
 module.exports = router;

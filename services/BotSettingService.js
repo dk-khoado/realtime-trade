@@ -3,6 +3,7 @@ const Response = require("../helpers/SevicesResponse")
 const SymbolModel = require("../models/bot_stratery").Symbol
 const FieldPropertiesModel = require("../models/bot_stratery").FieldProperties
 const GruopModel = require("../models/bot_stratery").Gruop
+const AccountMt5 = require("../models/account_mt5")
 const mongoose = require("mongoose")
 class BotSettingService extends ServiceBase {
     constructor(model) {
@@ -181,7 +182,7 @@ class BotSettingService extends ServiceBase {
                     ]
                 },
                 fields: 1,
-                fields_info:1
+                fields_info: 1
             }
         }]);
         if (result.length > 0) {
@@ -194,7 +195,7 @@ class BotSettingService extends ServiceBase {
     async get_setting_byID(id) {
         let result = await this.model.aggregate([{
             $match: {
-                "_id": mongoose.Types.ObjectId(id)              
+                "_id": mongoose.Types.ObjectId(id)
             }
         }, {
             $lookup: {
@@ -225,7 +226,7 @@ class BotSettingService extends ServiceBase {
                     ]
                 },
                 fields: 1,
-                fields_info:1,                
+                fields_info: 1,
             },
         }]);
         if (result.length > 0) {
@@ -269,6 +270,51 @@ class BotSettingService extends ServiceBase {
         }
     }
 
+    async get_setting_by_account(id) {
+        let account_info = await AccountMt5.findOne({ "username": id })
+        console.log(account_info)
+        let result = await this.model.aggregate([{
+            $match: {
+                "strategy_id": account_info.stratery_id
+            }
+        }, {
+            $lookup: {
+                from: "Symbol",
+                localField: "symbol_id",
+                foreignField: "_id",
+                as: "symbol_id"
+            }
+        }, {
+            $lookup: {
+                from: "BotStratery",
+                localField: "strategy_id",
+                foreignField: "_id",
+                as: "stratery"
+            }
+        }, { $lookup: { from: "FieldProperties", localField: "fields.field_id", foreignField: "_id", as: "fields_info" } }, {
+            $project: {
+                symbol: {
+                    $arrayElemAt: [
+                        "$symbol_id.name",
+                        0
+                    ]
+                },
+                stratery: {
+                    $arrayElemAt: [
+                        "$stratery.name",
+                        0
+                    ]
+                },
+                fields: 1,
+                fields_info: 1,
+            },
+        }]);
+        if (result.length > 0) {
+            return new Response(false, result);
+        } else {
+            return new Response(true, {}, 'Something wrong happened');
+        }
+    }
 }
 
 module.exports = { BotSettingService }
