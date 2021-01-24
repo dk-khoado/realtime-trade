@@ -35,6 +35,14 @@ class AccountMT5Controller extends Controller {
             res.send(response(error, false, 200, []))
         }
     }
+    async get_all_account(req, res, next){
+        try {
+            let result = await this.service.get_all_account()       
+            res.send(this.check_result_db(result))
+        } catch (error) {
+            res.send(response(error, false, 200, []))
+        }
+    }
 }
 
 module.exports = { AccountMT5Controller }

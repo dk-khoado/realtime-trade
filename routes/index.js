@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-
+const auth = require("../helpers/auth_9586")
 var AccountMT5Controller = require("../controllers/AccountMT5Controller").AccountMT5Controller
 var AccountMT5Service = require("../services/AccountMT5Service").AccountMT5Service
 var AccountMT5Model = require("../models/account_mt5")
@@ -16,18 +16,19 @@ var BotStrategyService = require("../services/BotStrategyService").BotStrategySe
 var BotStrategyModel = require("../models/bot_stratery").BotStratery
 const BotStrategy = new BotStrategyController(new BotStrategyService(BotStrategyModel))
 
+router.use(auth)
 /* GET home page. */
-router.get('/accounts', accountMT5.getAllAccount);
+router.get('/accounts', accountMT5.get_all_account);
 router.post('/accounts', accountMT5.createAccount);
 router.put('/accounts/:id', accountMT5.update);
 
 //tạo chiến lượt
-router.get("/bot-strategy",BotStrategy.getAll)
+router.get("/bot-strategy", BotStrategy.getAll)
 // {
 //     "name":"luot 11)1212"
 // }
-router.post("/bot-strategy",BotStrategy.insert)
-router.put("/bot-strategy/:id",BotStrategy.update)
+router.post("/bot-strategy", BotStrategy.insert)
+router.put("/bot-strategy/:id", BotStrategy.update)
 
 // client k quan tâm
 router.get("/group", botSetting.getAll_gruop)
