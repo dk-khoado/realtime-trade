@@ -20,6 +20,6 @@ module.exports = async function (req, res, next) {
             throw result.data
         }
     } catch (error) {
-        return res.send(response("", false, null, "you don`t have permission!"))
+        return res.send(response("", false, 401, "you don`t have permission!"))
     }
 }
