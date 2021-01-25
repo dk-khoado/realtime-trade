@@ -7,8 +7,8 @@ module.exports = async function (req, res, next) {
         if (!req.header('Authorization')) {
             throw "do not have Authorization"
         }
-        var token = req.header('Authorization').replace('Bearer ', '')        
-        if (myCache.get(token)) {            
+        var token = req.header('Authorization').replace('Bearer ', '')
+        if (token == process.env.API_KEY) {
             return next()
         }
         let url = process.env.API_CORE_URL || "https://api.9586team.xyz"
