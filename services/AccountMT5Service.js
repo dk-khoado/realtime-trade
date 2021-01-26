@@ -10,35 +10,37 @@ class AccountMT5Service extends ServiceBase {
     async get_all_account() {
         try {
             let result = await this.model.aggregate([
-            {
-                $lookup: {
-                    from: "BotStratery",
-                    localField: "stratery_id",
-                    foreignField: "_id",
-                    as: "stratery"
-                }
-            },
-            {
-                $project: {
-                    stratery_name: {
-                        $ifNull:[{$arrayElemAt: [
-                            "$stratery.name",
-                            0
-                        ]}, null]
-                        
-                    },
-                    stratery_id:{
-                        $ifNull:[
-                            "$stratery_id", null]
-                    },
-                    username: 1,
-                    initial_balance: 1,
-                    current_balance: 1
+                {
+                    $lookup: {
+                        from: "BotStratery",
+                        localField: "stratery_id",
+                        foreignField: "_id",
+                        as: "stratery"
+                    }
                 },
-            }
+                {
+                    $project: {
+                        stratery_name: {
+                            $ifNull: [{
+                                $arrayElemAt: [
+                                    "$stratery.name",
+                                    0
+                                ]
+                            }, null]
+
+                        },
+                        stratery_id: {
+                            $ifNull: [
+                                "$stratery_id", null]
+                        },
+                        username: 1,
+                        initial_balance: 1,
+                        current_balance: 1
+                    },
+                }
             ])
-            return new Response(false, {items: result, total: result.length});
-        } catch (error) {           
+            return new Response(false, { items: result, total: result.length });
+        } catch (error) {
             return new Response(true, error, "Error");
         }
     }
@@ -57,6 +59,14 @@ class AccountMT5Service extends ServiceBase {
                     as: "stratery"
                 }
             }])
+            return new Response(false, result);
+        } catch (error) {
+            return new Response(true, error, "Error");
+        }
+    }
+    async get_account_by_strategy_id(id) {
+        try {
+            let result =await this.model.find({ stratery_id: id });
             return new Response(false, result);
         } catch (error) {
             return new Response(true, error, "Error");

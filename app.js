@@ -46,7 +46,10 @@ io.attach(process.env.SOCKET_PORT || 3001, {
 })
 io.on('connection', (socket) => {
   console.log('a user connected');
-
+  socket.on("register", (data) => {
+    console.log(data)
+    socket.join(new String(data.account_id))
+  })
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });

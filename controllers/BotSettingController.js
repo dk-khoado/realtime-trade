@@ -1,16 +1,22 @@
 const Controller = require("../helpers/Controller");
 var response = require('../helpers/response');
 const { Gruop, FieldProperties } = require("../models/bot_stratery");
-const AccountMt5 = require("../services/AccountMT5Service").AccountMT5Service
+const account_mt5 = require("../models/account_mt5");
+const AccountMT5Service = require("../services/AccountMT5Service").AccountMT5Service
+const AccountMt5 = new AccountMT5Service(account_mt5)
 
 class BotSettingController extends Controller {
     constructor(service) {
         super(service);
         const changeStream = this.service.model.watch();
         changeStream.on('change', async (change) => {
-            console.log("change:", change.documentKey)
-            let doc = await this.service.get_setting_byID(change.documentKey._id)
-            global.io.emit("update_config", this.check_result_db(doc))
+            let doc = await this.service.get_setting_byID(change.documentKey._id)         
+            let result = this.check_result_db(doc)
+            let account = await AccountMt5.get_account_by_strategy_id(result.data_response.strategy_id)                                
+            account.getData().forEach(element => {
+                console.log(element)
+                global.io.in(element.username).emit("update_config", result)
+            });
         });
     }
     async create_group(req, res, next) {

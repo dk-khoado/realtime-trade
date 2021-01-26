@@ -225,6 +225,7 @@ class BotSettingService extends ServiceBase {
                         0
                     ]
                 },
+                strategy_id:1,
                 fields: 1,
                 fields_info: 1,
             },
