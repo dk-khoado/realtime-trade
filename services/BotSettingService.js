@@ -3,6 +3,7 @@ const Response = require("../helpers/SevicesResponse")
 const SymbolModel = require("../models/bot_stratery").Symbol
 const FieldPropertiesModel = require("../models/bot_stratery").FieldProperties
 const GruopModel = require("../models/bot_stratery").Gruop
+const BotVersion = require("../models/bot_stratery").BotVersion
 const AccountMt5 = require("../models/account_mt5")
 const mongoose = require("mongoose")
 class BotSettingService extends ServiceBase {
@@ -225,7 +226,7 @@ class BotSettingService extends ServiceBase {
                         0
                     ]
                 },
-                strategy_id:1,
+                strategy_id: 1,
                 fields: 1,
                 fields_info: 1,
             },
@@ -242,15 +243,39 @@ class BotSettingService extends ServiceBase {
                 "strategy_id": body.strategy_id,
                 "symbol_id": body.symbol_id,
             })
+            let rs = await BotVersion.findOne({ $query: {}, $orderby: { _id: -1 } })
             let query = {
                 "$set": {}
             }
             let options = {
                 arrayFilters: []
             }
+            if (item.bot_version < rs.version) {
+                let fields = await FieldPropertiesModel.find();
+                let origin_data = item.fields;
+                let dict_fields = new Object();
+                for (let index = 0; index < fields.length; index++) {
+                    let element = fields[index];
+                    dict_fields[element._id] = { field_id: element._id, value: element.default_value }
+                }
+                for (let i = 0; i < origin_data.length; i++) {
+                    const element = origin_data[i];
+                    if (dict_fields[element.field_id]) {
+                        dict_fields[element.field_id].value = element.value
+                    }
+                }
+                let rs_update_setting = await this.model.updateOne({
+                    "strategy_id": body.strategy_id,
+                    "symbol_id": body.symbol_id,
+                }, { fields: Object.values(dict_fields), bot_version: rs.version })
+                
+                if (!rs_update_setting) {
+                    throw "lỗi không thể cập nhật version setting";
+                }
+            }
+            // return new Response(false, result);
             for (let index = 0; index < body.fields.length; index++) {
                 const element = body.fields[index];
-                // const index_field = item.fields.findIndex(v => v.field_id == element.field_id)  
                 let elt = `index${index}`
                 let obj_option = {}
                 obj_option[`${elt}.field_id`] = element.field_id
@@ -270,10 +295,11 @@ class BotSettingService extends ServiceBase {
             return new Response(true, error, "Error");
         }
     }
+    async update_version_setting(body) {
 
+    }
     async get_setting_by_account(id) {
-        let account_info = await AccountMt5.findOne({ "username": id })
-        console.log(account_info)
+        let account_info = await AccountMt5.findOne({ "username": id })        
         let result = await this.model.aggregate([{
             $match: {
                 "strategy_id": account_info.stratery_id

@@ -44,17 +44,14 @@ app.use(function (err, req, res, next) {
 io.attach(process.env.SOCKET_PORT || 3001, {
   pingInterval: 2000
 })
-io.on('connection', (socket) => {
-  console.log('a user connected');
-  socket.on("register", (data) => {
-    console.log(data)
-    socket.join(new String(data.account_id))
-  })
+const workspaces = io.of(/^\/setting\/\w+$/);
+workspaces.on('connection', (socket) => {
+  const workspace = socket.nsp;
+  console.log('user connected');  
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
 });
-
 global.io = io
 
 module.exports = app;

@@ -13,13 +13,12 @@ module.exports = async function (req, res, next) {
         }
         let url = process.env.API_CORE_URL || "https://api.9586team.xyz"
         let result = await asios.get(url + `/api/account/validateTokenLogin?token=${token}`, { method: "GET" })
-        if (result.data.is_success == true) {
-            myCache.set(token, true)
+        if (result.data.is_success == true) {          
             next()
         } else {
             throw result.data
         }
     } catch (error) {
-        return res.send(response("", false, 401, "you don`t have permission!"))
+        return res.send(response(error, false, 401, "you don`t have permission!"))
     }
 }

@@ -5,14 +5,14 @@ const BotSetting = new Schema({
     gruop_id: {
         type: Schema.Types.ObjectId,
         default: null,
-        index:true
+        index: true
     },
     fields: [
         {
             field_id: {
                 type: Schema.Types.ObjectId,
                 required: true,
-                index:true
+                index: true
             },
             value: {
                 type: String,
@@ -23,12 +23,16 @@ const BotSetting = new Schema({
     strategy_id: {
         type: Schema.Types.ObjectId,
         required: true,
-        index:true
+        index: true
     },
     symbol_id: {
         type: Schema.Types.ObjectId,
         required: true,
-        index:true
+        index: true
+    },
+    bot_version: {
+        type: Number,
+        default: 0.0
     }
 })
 
