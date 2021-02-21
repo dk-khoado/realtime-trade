@@ -16,7 +16,7 @@ var BotStrategyService = require("../services/BotStrategyService").BotStrategySe
 var BotStrategyModel = require("../models/bot_stratery").BotStratery
 const BotStrategy = new BotStrategyController(new BotStrategyService(BotStrategyModel))
 
-router.use(auth)
+//router.use(auth)
 /* GET home page. */
 router.get('/accounts', accountMT5.get_all_account);
 router.post('/accounts', accountMT5.createAccount);
