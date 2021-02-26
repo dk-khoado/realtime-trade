@@ -8,7 +8,7 @@ var accountMT5 = new AccountMT5Controller(new AccountMT5Service(AccountMT5Model)
 
 var BotSettingController = require("../controllers/BotSettingController").BotSettingController
 var BotSettingService = require("../services/BotSettingService").BotSettingService
-var BotSettingModel = require("../models/bot_setting")
+var BotSettingModel = require("../models/bot_setting").BOT_SETTING
 const botSetting = new BotSettingController(new BotSettingService(BotSettingModel))
 
 var BotStrategyController = require("../controllers/BotStrategyController").BotStrategyController
@@ -16,6 +16,10 @@ var BotStrategyService = require("../services/BotStrategyService").BotStrategySe
 var BotStrategyModel = require("../models/bot_stratery").BotStratery
 const BotStrategy = new BotStrategyController(new BotStrategyService(BotStrategyModel))
 
+var BotControlController = require("../controllers/BotControlController").BotControlController
+var BotControlService = require("../services/BotControllerService").BotControlService
+var BotControlModel = require("../models/bot_setting").BOT_CONTROL
+const botControl = new BotControlController(new BotControlService(BotControlModel))
 //router.use(auth)
 /* GET home page. */
 router.get('/accounts', accountMT5.get_all_account);
@@ -59,4 +63,11 @@ router.post("/bot-setting", botSetting.create_setting)
 router.put("/bot-setting", botSetting.update_setting)
 
 router.get("/bot-running/:id", botSetting.get_setting_by_account)
+
+//Tạo bot config
+router.put("/create_config", botControl.createBotConfig);
+router.get("/getAllConfig", botControl.getAllConfig);
+router.post("/getConfigByID", botControl.get_bot_config_by_id);
+router.post("/update_bot_config", botControl.updateBotConfig);
+
 module.exports = router;

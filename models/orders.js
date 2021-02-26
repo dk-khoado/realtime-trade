@@ -10,9 +10,9 @@ const OrdersSchema = new Schema({
         type: Schema.Types.ObjectId,
         required: true
     },
-    simbol: {
-        type: String,
-        required: true
+    symbol_id: {
+        type: Schema.Types.ObjectId,
+        required: true,
     },
     type_order: {
         type: String,
