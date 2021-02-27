@@ -7,7 +7,7 @@ require('dotenv').config()
 var db = require("./models/indexDB")
 var cors = require("cors")
 var indexRouter = require('./routes/index');
-var dashboardRouter = require('./routes/dashboard');
+var walletRouter = require('./routes/wallet');
 var ordersRouter = require('./routes/orders');
 const io = require('socket.io')();
 var app = express();
@@ -23,6 +23,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/order', ordersRouter);
+app.use('/account', walletRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -45,9 +46,17 @@ io.attach(process.env.SOCKET_PORT || 3001, {
   pingInterval: 2000
 })
 const workspaces = io.of(/^\/setting\/\w+$/);
+const orderController = io.of(/^\/orders\/\w+$/);
+const open_position = {}
+orderController.on("connection", (socket) => {
+    socket.on("open_position", (history)=>{
+
+    })
+})
+
 workspaces.on('connection', (socket) => {
   const workspace = socket.nsp;
-  console.log('user connected');  
+  console.log('user connected');
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
