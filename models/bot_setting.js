@@ -30,6 +30,14 @@ const BotSetting = new Schema({
         required: true,
         index: true
     },
+    time_frames: {
+        type: Number,
+        required: true,
+        default: 60,
+        min: 1,
+        max: 240
+    },
+    
     bot_version: {
         type: Number,
         default: 0.0
