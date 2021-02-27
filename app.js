@@ -9,6 +9,7 @@ var cors = require("cors")
 var indexRouter = require('./routes/index');
 var walletRouter = require('./routes/wallet');
 var ordersRouter = require('./routes/orders');
+var transRouter = require('./routes/transactions');
 const io = require('socket.io')();
 var app = express();
 // view engine setup
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/order', ordersRouter);
 app.use('/account', walletRouter);
+app.use('/trans', transRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
