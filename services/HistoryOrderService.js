@@ -9,8 +9,14 @@ class HistoryOrderService extends ServiceBase {
     }
 
     async create_history_orders(body) {
+        for(let i = 0; i < body.items.length; i++){
+            body.items[i].username = body.username
+        }
+
         try {
-            let history_order = await this.model.create(body);
+            let history_order = await this.model.insertMany(
+                body.items
+            );
             if (history_order) {
                 return new Response(false, history_order);
             } else {
