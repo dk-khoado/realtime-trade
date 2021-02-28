@@ -51,7 +51,7 @@ app.use(function (err, req, res, next) {
 io.attach(process.env.SOCKET_PORT || 3001, {
   pingInterval: 2000
 })
-
+io.set('origins', '*:*');
 const workspaces = io.of(/^\/setting\/\w+$/);
 const orderController = io.of(/^\/orders\/\w+$/);
 
