@@ -14,7 +14,7 @@ var transRouter = require('./routes/transactions');
 const io = require('socket.io')();
 
 const logging = require('./helpers/Logger').Logging
-
+const response = require("./helpers/response")
 // view engine setup
 var app = express();
 app.set('views', path.join(__dirname, 'views'));
@@ -61,20 +61,27 @@ orderController.use((socket, next) => {
 })
 orderController.on("connection", (socket) => {
   // nhận danh sách lệnh và gửi đi cho các client trong nsp
-  socket.on("position:action:list", (positions) => {       
+  logging("orders connected", socket.id)
+  socket.on("position:action:list", (positions) => {
     socket.broadcast.emit("position:list", positions)
   })
   // gửi lệnh đên action
   socket.on("orders:create", (order_data) => {
-    logging("orders:create", order_data)
-    socket.broadcast.emit("orders_action_create", order_data)
+    logging("orders:create", JSON.stringify(order_data))
+    socket.broadcast.emit("orders_action_create", response("", true, 200, order_data, "new orders"))
   })
+
   socket.on("orders:action:prices", (order_data) => {
     socket.broadcast.emit("orders:prices", order_data)
   })
 
   socket.on("orders_action_create_notify", (msg) => {
-    io.emit("orders:create:notify", msg)
+    io.emit("orders:notify", msg)
+  })
+  //chỉnh sửa lệnh
+  socket.on("orders:edit", (order_data) => {
+    logging("orders:edit", JSON.stringify(order_data))
+    socket.broadcast.emit("orders_action_edit", response("", true, 200, order_data, "edit orders"))
   })
 
 })
