@@ -26,6 +26,8 @@ router.get('/accounts', accountMT5.get_all_account);
 router.post('/accounts', accountMT5.createAccount);
 router.put('/accounts/:id', accountMT5.update);
 
+router.post('/accounts/register', accountMT5.registerAccount);
+
 //tạo chiến lượt
 router.get("/bot-strategy", BotStrategy.getAll)
 // {

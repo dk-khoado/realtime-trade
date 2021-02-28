@@ -4,15 +4,19 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 require('dotenv').config()
-var db = require("./models/indexDB")
+require("./models/indexDB")
+
 var cors = require("cors")
 var indexRouter = require('./routes/index');
 var walletRouter = require('./routes/wallet');
 var ordersRouter = require('./routes/orders');
 var transRouter = require('./routes/transactions');
 const io = require('socket.io')();
-var app = express();
+
+const logging = require('./helpers/Logger').Logging
+
 // view engine setup
+var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -47,13 +51,32 @@ app.use(function (err, req, res, next) {
 io.attach(process.env.SOCKET_PORT || 3001, {
   pingInterval: 2000
 })
+
 const workspaces = io.of(/^\/setting\/\w+$/);
 const orderController = io.of(/^\/orders\/\w+$/);
-const open_position = {}
-orderController.on("connection", (socket) => {
-    socket.on("open_position", (history)=>{
 
-    })
+orderController.use((socket, next) => {
+  // console.log(socket.handshake);
+  next()
+})
+orderController.on("connection", (socket) => {
+  // nhận danh sách lệnh và gửi đi cho các client trong nsp
+  socket.on("position:action:list", (positions) => {       
+    socket.broadcast.emit("position:list", positions)
+  })
+  // gửi lệnh đên action
+  socket.on("orders:create", (order_data) => {
+    logging("orders:create", order_data)
+    socket.broadcast.emit("orders_action_create", order_data)
+  })
+  socket.on("orders:action:prices", (order_data) => {
+    socket.broadcast.emit("orders:prices", order_data)
+  })
+
+  socket.on("orders_action_create_notify", (msg) => {
+    io.emit("orders:create:notify", msg)
+  })
+
 })
 
 workspaces.on('connection', (socket) => {
@@ -64,5 +87,5 @@ workspaces.on('connection', (socket) => {
   });
 });
 global.io = io
-
+global.log = logging
 module.exports = app;
