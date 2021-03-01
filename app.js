@@ -51,10 +51,9 @@ app.use(function (err, req, res, next) {
 io.attach(process.env.SOCKET_PORT || 3001, {
   pingInterval: 2000
 })
-io.set('origins', '*:*');
+
 const workspaces = io.of(/^\/setting\/\w+$/);
 const orderController = io.of(/^\/orders\/\w+$/);
-
 orderController.use((socket, next) => {
   // console.log(socket.handshake);
   next()
@@ -63,7 +62,16 @@ orderController.on("connection", (socket) => {
   // nhận danh sách lệnh và gửi đi cho các client trong nsp
   logging("orders connected", socket.id)
   socket.on("position:action:list", (positions) => {
+    let json = [{
+      gr_id: "1231",
+      sell_lots: "0.01",
+      buy_lots: "0.01",
+      profit: "0.1"
+    }]
     socket.broadcast.emit("position:list", positions)
+  })
+  socket.on("position:list", ()=>{
+    socket.broadcast.emit("position_action_list")
   })
   // gửi lệnh đên action
   socket.on("orders:create", (order_data) => {
@@ -71,7 +79,7 @@ orderController.on("connection", (socket) => {
     socket.broadcast.emit("orders_action_create", response("", true, 200, order_data, "new orders"))
   })
 
-  socket.on("orders:action:prices", (order_data) => {
+  socket.on("orders:action:prices", (order_data) => {    
     socket.broadcast.emit("orders:prices", order_data)
   })
 
