@@ -1,6 +1,7 @@
 const ServiceBase = require("../helpers/ServicesBase").ServiceBase
 const Response = require("../helpers/SevicesResponse")
 var response = require('../helpers/response');
+var setLastData = require('../helpers/setLastData');
 
 const mongoose = require("mongoose")
 class HistoryOrderService extends ServiceBase {
@@ -29,34 +30,35 @@ class HistoryOrderService extends ServiceBase {
 
     async get_history_order(username) {
         try {
+            var objData = setLastData("username", 
+                [   
+                    "time", 
+                    "time_msc", 
+                    "type", 
+                    "entry", 
+                    "magic", 
+                    "position_id", 
+                    "volume", 
+                    "price", 
+                    "commission", 
+                    "swap", 
+                    "profit", 
+                    "fee", 
+                    "comment", 
+                    "ticket", 
+                    "order", 
+                    "symbol"
+                ])
             let order = await this.model.aggregate(
                 [
                     { $match: { username: username } },
                     {
-                        $group:
-                        {
-                            _id: "$username",
-                            time: { $last: "$time" },
-                            time_msc: { $last: "$time_msc" },
-                            type: { $last: "$type" },
-                            entry: { $last: "$entry" },
-                            magic: { $last: "$magic" },
-                            position_id: { $last: "$position_id" },
-                            volume: { $last: "$volume" },
-                            price: { $last: "$price" },
-                            commission: { $last: "$commission" },
-                            swap: { $last: "$swap" },
-                            profit: { $last: "$profit" },
-                            fee: { $last: "$fee" },
-                            comment: { $last: "$comment" },
-                            ticket: { $last: "$ticket" },
-                            order: { $last: "$order" },
-                            symbol: { $last: "$symbol" },
-                        }
+                        $group: objData
                     }
                 ]
             );
             if (order) {
+                order[0].username = order[0]._id
                 return new Response(false, order);
             } else {
                 return new Response(true, {}, 'Something wrong happened');
