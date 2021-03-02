@@ -20,7 +20,6 @@ var BotControlController = require("../controllers/BotControlController").BotCon
 var BotControlService = require("../services/BotControllerService").BotControlService
 var BotControlModel = require("../models/bot_setting").BOT_CONTROL
 const botControl = new BotControlController(new BotControlService(BotControlModel))
-
 router.use(auth)
 /* GET home page. */
 router.get('/accounts', accountMT5.get_all_account);
