@@ -33,6 +33,9 @@ router.post("/accounts/groups", accountMT5.create_group);
 //chuyern 0 để lấy nhóm mặc định
 router.get("/accounts/groups/:id", accountMT5.get_detail_group)
 
+router.post("/accounts/groups/apply", accountMT5.apply_group) 
+router.post("/accounts/groups/remove", accountMT5.remove_group)
+
 //tạo chiến lượt
 router.get("/bot-strategy", BotStrategy.getAll)
 // {

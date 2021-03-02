@@ -85,9 +85,17 @@ class AccountMT5Controller extends Controller {
             res.send(response(error, false, 200, []))
         }
     }
-    async apply_group(req, res, next) {
+    async apply_group(req, res, next) {  
         try {
             let result = await this.service.apply_group(req.body)
+            res.send(this.check_result_db(result))
+        } catch (error) {
+            res.send(response(error, false, 200, []))
+        }
+    }
+    async remove_group(req, res, next) {
+        try {
+            let result = await this.service.remove_group(req.body)
             res.send(this.check_result_db(result))
         } catch (error) {
             res.send(response(error, false, 200, []))

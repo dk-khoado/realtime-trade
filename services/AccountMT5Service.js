@@ -123,6 +123,25 @@ class AccountMT5Service extends ServiceBase {
         }
     }
 
+    async apply_group(body) {
+        try {
+            let result = await this.model.updateOne({ _id: body.account_id },
+                { group_id: body.group_id })
+            return new Response(false, result);
+        } catch (error) {                  
+            return new Response(true, error, "Error");
+        }
+    }
+    async remove_group(body) {
+        try {
+            let result = await this.model.updateOne({ _id: body.account_id },
+                { group_id: null })
+            return new Response(false, result);
+        } catch (error) {
+            return new Response(true, error, "Error");
+        }
+    }
+
 }
 
 module.exports = { AccountMT5Service }
