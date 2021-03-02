@@ -49,14 +49,48 @@ class AccountMT5Controller extends Controller {
             global.log(module.filename, JSON.stringify(req.body));
             let hasExist = await this.service.model.exists({ username: req.body.username })
             if (hasExist) {
-                req.params.id = req.body.username                   
-                await this.update(req, res, next);
+                let result = await this.service.update_banlance_account(req.body)
+                global.log(module.filename, JSON.stringify(result));
+                res.send(this.check_result_db(result))
             } else {
                 await this.createAccount(req, res, next);
             }
         } catch (error) {
-            global.log(module.filename, result.getMessage())
-            res.send(response(error, false, 200, [], result.getMessage()))
+            global.log(module.filename, error)
+            res.send(response(error, false, 200, [], error))
+        }
+    }
+    async get_all_group(req, res, next) {
+        try {
+            let result = await this.service.get_all_group()
+            res.send(this.check_result_db(result))
+        } catch (error) {
+            res.send(response(error, false, 200, []))
+        }
+    }
+
+    async get_detail_group(req, res, next) {
+        try {
+            let result = await this.service.get_detail_group(req.params.id)
+            res.send(this.check_result_db(result))
+        } catch (error) {
+            res.send(response(error, false, 200, []))
+        }
+    }
+    async create_group(req, res, next) {
+        try {
+            let result = await this.service.create_group(req.body)
+            res.send(this.check_result_db(result))
+        } catch (error) {
+            res.send(response(error, false, 200, []))
+        }
+    }
+    async apply_group(req, res, next) {
+        try {
+            let result = await this.service.apply_group(req.body)
+            res.send(this.check_result_db(result))
+        } catch (error) {
+            res.send(response(error, false, 200, []))
         }
     }
 }

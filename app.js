@@ -62,12 +62,6 @@ orderController.on("connection", (socket) => {
   // nhận danh sách lệnh và gửi đi cho các client trong nsp
   logging("orders connected", socket.id)
   socket.on("position:action:list", (positions) => {
-    let json = [{
-      gr_id: "1231",
-      sell_lots: "0.01",
-      buy_lots: "0.01",
-      profit: "0.1"
-    }]
     socket.broadcast.emit("position:list", positions)
   })
   socket.on("position:list", ()=>{
@@ -79,7 +73,7 @@ orderController.on("connection", (socket) => {
     socket.broadcast.emit("orders_action_create", response("", true, 200, order_data, "new orders"))
   })
 
-  socket.on("orders:action:prices", (order_data) => {    
+  socket.on("orders:action:prices", (order_data) => { 
     socket.broadcast.emit("orders:prices", order_data)
   })
 

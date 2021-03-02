@@ -1,7 +1,7 @@
 const ServiceBase = require("../helpers/ServicesBase").ServiceBase
 const mongoose = require("mongoose")
 const Response = require("../helpers/SevicesResponse")
-
+const AccountGroup = require("../models/account_mt5").AccountGroup
 
 class AccountMT5Service extends ServiceBase {
     constructor(model) {
@@ -66,12 +66,63 @@ class AccountMT5Service extends ServiceBase {
     }
     async get_account_by_strategy_id(id) {
         try {
-            let result =await this.model.find({ stratery_id: id });
+            let result = await this.model.find({ stratery_id: id });
             return new Response(false, result);
         } catch (error) {
             return new Response(true, error, "Error");
         }
     }
+
+    async get_all_group() {
+        try {
+            let result = await AccountGroup.find();
+            return new Response(false, result);
+        } catch (error) {
+            return new Response(true, error, "Error");
+        }
+    }
+    async get_detail_group(id) {
+        try {
+            let result = []
+            if (id == 0) {
+                result = await this.model.find({ group_id: null })
+
+            } else {
+                result = await this.model.find({ group_id: id })
+
+            }
+            return new Response(false, result);
+        } catch (error) {
+            return new Response(true, error, "Error");
+        }
+    }
+    async create_group(body) {
+        try {
+            let result = await AccountGroup.create({ name: body.name })
+            return new Response(false, result);
+        } catch (error) {
+            return new Response(true, error, "Error");
+        }
+    }
+    async apply_group(body) {
+        try {
+            let result = await this.model.updateOne({ id: body.id }, { group_id: body.group_id })
+            return new Response(false, result);
+        } catch (error) {
+            return new Response(true, error, "Error");
+        }
+    }
+
+    async update_banlance_account(body) {
+        try {
+            let result = await this.model.updateOne({ username: body.username },
+                { current_balance: body.current_balance })
+            return new Response(false, result);
+        } catch (error) {
+            return new Response(true, error, "Error");
+        }
+    }
+
 }
 
 module.exports = { AccountMT5Service }

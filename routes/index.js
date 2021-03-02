@@ -3,7 +3,7 @@ var router = express.Router();
 const auth = require("../helpers/auth_9586")
 var AccountMT5Controller = require("../controllers/AccountMT5Controller").AccountMT5Controller
 var AccountMT5Service = require("../services/AccountMT5Service").AccountMT5Service
-var AccountMT5Model = require("../models/account_mt5")
+var AccountMT5Model = require("../models/account_mt5").AccountMt5
 var accountMT5 = new AccountMT5Controller(new AccountMT5Service(AccountMT5Model))
 
 var BotSettingController = require("../controllers/BotSettingController").BotSettingController
@@ -20,13 +20,19 @@ var BotControlController = require("../controllers/BotControlController").BotCon
 var BotControlService = require("../services/BotControllerService").BotControlService
 var BotControlModel = require("../models/bot_setting").BOT_CONTROL
 const botControl = new BotControlController(new BotControlService(BotControlModel))
-//router.use(auth)
+
+router.use(auth)
 /* GET home page. */
 router.get('/accounts', accountMT5.get_all_account);
 router.post('/accounts', accountMT5.createAccount);
 router.put('/accounts/:id', accountMT5.update);
 
 router.post('/accounts/register', accountMT5.registerAccount);
+//nhóm tài khoản
+router.get("/accounts/groups", accountMT5.get_all_group);
+router.post("/accounts/groups", accountMT5.create_group);
+//chuyern 0 để lấy nhóm mặc định
+router.get("/accounts/groups/:id", accountMT5.get_detail_group)
 
 //tạo chiến lượt
 router.get("/bot-strategy", BotStrategy.getAll)
@@ -36,9 +42,7 @@ router.get("/bot-strategy", BotStrategy.getAll)
 router.post("/bot-strategy", BotStrategy.insert)
 router.put("/bot-strategy/:id", BotStrategy.update)
 
-// client k quan tâm
-router.get("/group", botSetting.getAll_gruop)
-router.post("/group", botSetting.create_group)
+
 
 // client k quan tâm
 router.get("/symbols", botSetting.getAll_symbols)
