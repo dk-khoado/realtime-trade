@@ -4,7 +4,7 @@ const SymbolModel = require("../models/bot_stratery").Symbol
 const FieldPropertiesModel = require("../models/bot_stratery").FieldProperties
 const GruopModel = require("../models/bot_stratery").Gruop
 const BotVersion = require("../models/bot_stratery").BotVersion
-const AccountMt5 = require("../models/account_mt5")
+const AccountMt5 = require("../models/account_mt5").AccountMt5
 const mongoose = require("mongoose")
 class BotSettingService extends ServiceBase {
     constructor(model) {

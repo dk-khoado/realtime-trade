@@ -1,7 +1,7 @@
 const Controller = require("../helpers/Controller");
 var response = require('../helpers/response');
 const { Gruop, FieldProperties } = require("../models/bot_stratery");
-const account_mt5 = require("../models/account_mt5");
+const account_mt5 = require("../models/account_mt5").AccountMt5;
 const AccountMT5Service = require("../services/AccountMT5Service").AccountMT5Service
 const AccountMt5 = new AccountMT5Service(account_mt5)
 
