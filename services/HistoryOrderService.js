@@ -10,13 +10,13 @@ class HistoryOrderService extends ServiceBase {
     }
 
     async create_history_orders(body) {
-        for(let i = 0; i < body.items.length; i++){
+        for (let i = 0; i < body.items.length; i++) {
             body.items[i].username = body.username
         }
-
+        // console.log(body.items)
         try {
             let history_order = await this.model.insertMany(
-                body.items
+                body.items, { ordered: false }
             );
             if (history_order) {
                 return new Response(false, history_order);
@@ -30,23 +30,23 @@ class HistoryOrderService extends ServiceBase {
 
     async get_history_order(username) {
         try {
-            var objData = setLastData("username", 
-                [   
-                    "time", 
-                    "time_msc", 
-                    "type", 
-                    "entry", 
-                    "magic", 
-                    "position_id", 
-                    "volume", 
-                    "price", 
-                    "commission", 
-                    "swap", 
-                    "profit", 
-                    "fee", 
-                    "comment", 
-                    "ticket", 
-                    "order", 
+            var objData = setLastData("username",
+                [
+                    "time",
+                    "time_msc",
+                    "type",
+                    "entry",
+                    "magic",
+                    "position_id",
+                    "volume",
+                    "price",
+                    "commission",
+                    "swap",
+                    "profit",
+                    "fee",
+                    "comment",
+                    "ticket",
+                    "order",
                     "symbol"
                 ])
             let order = await this.model.aggregate(

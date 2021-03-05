@@ -5,7 +5,6 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 require('dotenv').config()
 require("./models/indexDB")
-
 var cors = require("cors")
 var indexRouter = require('./routes/index');
 var walletRouter = require('./routes/wallet');
@@ -15,6 +14,8 @@ const io = require('socket.io')();
 
 const logging = require('./helpers/Logger').Logging
 const response = require("./helpers/response")
+
+var notify = require("./models/notification").notification
 // view engine setup
 var app = express();
 app.set('views', path.join(__dirname, 'views'));
@@ -51,7 +52,9 @@ app.use(function (err, req, res, next) {
 io.attach(process.env.SOCKET_PORT || 3001, {
   pingInterval: 2000
 })
-
+// io.on("connection", (socket)=>{
+//   socket.on("")
+// })
 const workspaces = io.of(/^\/setting\/\w+$/);
 const orderController = io.of(/^\/orders\/\w+$/);
 orderController.use((socket, next) => {
@@ -64,7 +67,7 @@ orderController.on("connection", (socket) => {
   socket.on("position:action:list", (positions) => {
     socket.broadcast.emit("position:list", positions)
   })
-  socket.on("position:list", ()=>{
+  socket.on("position:list", () => {
     socket.broadcast.emit("position_action_list")
   })
   // gửi lệnh đên action
@@ -73,12 +76,13 @@ orderController.on("connection", (socket) => {
     socket.broadcast.emit("orders_action_create", response("", true, 200, order_data, "new orders"))
   })
 
-  socket.on("orders:action:prices", (order_data) => { 
+  socket.on("orders:action:prices", (order_data) => {
     socket.broadcast.emit("orders:prices", order_data)
   })
 
-  socket.on("orders_action_create_notify", (msg) => {
-    io.emit("orders:notify", msg)
+  socket.on("orders:action:create:notify", async (msg) => {
+    await notify.create(msg)
+    socket.broadcast.emit("orders:notify", msg)
   })
   //chỉnh sửa lệnh
   socket.on("orders:edit", (order_data) => {
