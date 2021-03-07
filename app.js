@@ -72,7 +72,8 @@ orderController.on("connection", (socket) => {
   })
   // gửi lệnh đên action
   socket.on("orders:create", (order_data) => {
-    logging("orders:create", JSON.stringify(order_data))
+    let logs = { nps: socket.nsp, order_data }
+    logging("orders:create", JSON.stringify(logs))
     socket.broadcast.emit("orders_action_create", response("", true, 200, order_data, "new orders"))
   })
 
