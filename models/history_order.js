@@ -16,12 +16,12 @@ const OrdersHistorySchema = new Schema({
         required: true
     },
     time: {
-        type: Date,
-        default: new Date(Date.now()),
+        type: Number,
+        required: true
     },
     time_msc: {
-        type: String,
-        default: (new Date(Date.now()-(new Date()).getTimezoneOffset() * 60000)).toISOString().slice(0, 19).replace(/[^0-9]/g, ""),
+        type: Number,
+        required: true
     },
     type: {
         type: Number,

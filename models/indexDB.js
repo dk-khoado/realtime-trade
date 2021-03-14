@@ -23,7 +23,7 @@ mongoose.set("debug", (collectionName, method, query, doc) => {
         break;
       default:
         log.save()
-        console.log("save logs")
+        //console.log("save logs")
         break;
     }
 
