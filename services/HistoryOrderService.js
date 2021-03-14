@@ -16,7 +16,7 @@ class HistoryOrderService extends ServiceBase {
         // console.log(body.items)
         try {
             let history_order = await this.model.insertMany(
-                body.items, { ordered: false }
+                body.items, { ordered: false,  }
             );
             if (history_order) {
                 return new Response(false, history_order);
