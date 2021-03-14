@@ -27,7 +27,7 @@ class TransactionService extends ServiceBase {
                     throw "This transaction type not exits !!!"
             }
 
-            let transaction = await this.model.create(body)
+            let transaction = await this.model.insertMany(body)
             if (transaction) {
                 if (transaction.transaction_type == 0) {
                     let bodyMaster = {
