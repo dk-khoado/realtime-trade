@@ -23,7 +23,7 @@ class TransactionUserService extends ServiceBase {
                     throw "This transaction type not exits !!!"
             }
 
-            let transaction_user = await this.model.create(body)
+            let transaction_user = await this.model.insertMany(body)
             if (transaction_user) {
                 return new Response(false, transaction_user);
             } else {

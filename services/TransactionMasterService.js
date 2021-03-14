@@ -25,7 +25,7 @@ class TransactionMasterService extends ServiceBase {
                     throw "This transaction type not exits !!!"
             }
 
-            let transaction_admin = await this.model.create(body)
+            let transaction_admin = await this.model.insertMany(body)
             if (transaction_admin) {
                 return new Response(false, transaction_admin);
             } else {
