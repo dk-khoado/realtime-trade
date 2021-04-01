@@ -4,7 +4,8 @@ const Schema = mongoose.Schema
 const OrdersSchema = new Schema({
     ticket: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     account_id: {
         type: Schema.Types.ObjectId,
