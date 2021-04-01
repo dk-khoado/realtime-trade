@@ -19,6 +19,7 @@ class HistoryOrderService extends ServiceBase {
                 body.items, { ordered: false }
             );
             if (history_order) {
+                console.log(history_order)
                 return new Response(false, history_order);
             } else {
                 return new Response(true, {}, 'Something wrong happened');

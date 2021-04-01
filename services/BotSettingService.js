@@ -12,7 +12,9 @@ class BotSettingService extends ServiceBase {
     }
     async create_Group(body) {
         try {
-            let item = await GruopModel.create({ name: body.name })
+            let item = await GruopModel.create({
+                name: body.name
+            })
             if (item) {
                 return new Response(false, item);
             } else {
@@ -33,7 +35,9 @@ class BotSettingService extends ServiceBase {
 
     async create_symbol(body) {
         try {
-            let item = await SymbolModel.create({ name: body.name })
+            let item = await SymbolModel.create({
+                name: body.name
+            })
             if (item) {
                 return new Response(false, item);
             } else {
@@ -66,8 +70,14 @@ class BotSettingService extends ServiceBase {
             let item = []
             for (let index = 0; index < body.items.length; index++) {
                 const element = body.items[index];
-                let result = await FieldPropertiesModel.findOneAndUpdate({ name: element.name }, element,
-                    { new: true, upsert: true, setDefaultsOnInsert: true, runValidators: true })
+                let result = await FieldPropertiesModel.findOneAndUpdate({
+                    name: element.name
+                }, element, {
+                    new: true,
+                    upsert: true,
+                    setDefaultsOnInsert: true,
+                    runValidators: true
+                })
                 item.push(result)
             }
             if (item) {
@@ -126,8 +136,7 @@ class BotSettingService extends ServiceBase {
                 "gruop_id": body.gruop_id,
                 "strategy_id": body.strategy_id,
                 "symbol_id": body.symbol_id,
-                "fields": [
-                ]
+                "fields": []
             }
             for (let index = 0; index < item.length; index++) {
                 const element = item[index];
@@ -168,7 +177,14 @@ class BotSettingService extends ServiceBase {
                 foreignField: "_id",
                 as: "stratery"
             }
-        }, { $lookup: { from: "FieldProperties", localField: "fields.field_id", foreignField: "_id", as: "fields_info" } }, {
+        }, {
+            $lookup: {
+                from: "FieldProperties",
+                localField: "fields.field_id",
+                foreignField: "_id",
+                as: "fields_info"
+            }
+        }, {
             $project: {
                 symbol: {
                     $arrayElemAt: [
@@ -212,7 +228,14 @@ class BotSettingService extends ServiceBase {
                 foreignField: "_id",
                 as: "stratery"
             }
-        }, { $lookup: { from: "FieldProperties", localField: "fields.field_id", foreignField: "_id", as: "fields_info" } }, {
+        }, {
+            $lookup: {
+                from: "FieldProperties",
+                localField: "fields.field_id",
+                foreignField: "_id",
+                as: "fields_info"
+            }
+        }, {
             $project: {
                 symbol: {
                     $arrayElemAt: [
@@ -243,7 +266,12 @@ class BotSettingService extends ServiceBase {
                 "strategy_id": body.strategy_id,
                 "symbol_id": body.symbol_id,
             })
-            let rs = await BotVersion.findOne({ $query: {}, $orderby: { _id: -1 } })
+            let rs = await BotVersion.findOne({
+                $query: {},
+                $orderby: {
+                    _id: -1
+                }
+            })
             let query = {
                 "$set": {}
             }
@@ -256,7 +284,10 @@ class BotSettingService extends ServiceBase {
                 let dict_fields = new Object();
                 for (let index = 0; index < fields.length; index++) {
                     let element = fields[index];
-                    dict_fields[element._id] = { field_id: element._id, value: element.default_value }
+                    dict_fields[element._id] = {
+                        field_id: element._id,
+                        value: element.default_value
+                    }
                 }
                 for (let i = 0; i < origin_data.length; i++) {
                     const element = origin_data[i];
@@ -267,8 +298,11 @@ class BotSettingService extends ServiceBase {
                 let rs_update_setting = await this.model.updateOne({
                     "strategy_id": body.strategy_id,
                     "symbol_id": body.symbol_id,
-                }, { fields: Object.values(dict_fields), bot_version: rs.version })
-                
+                }, {
+                    fields: Object.values(dict_fields),
+                    bot_version: rs.version
+                })
+
                 if (!rs_update_setting) {
                     throw "lỗi không thể cập nhật version setting";
                 }
@@ -299,7 +333,9 @@ class BotSettingService extends ServiceBase {
 
     }
     async get_setting_by_account(id) {
-        let account_info = await AccountMt5.findOne({ "username": id })        
+        let account_info = await AccountMt5.findOne({
+            "username": id
+        })
         let result = await this.model.aggregate([{
             $match: {
                 "strategy_id": account_info.stratery_id
@@ -318,7 +354,14 @@ class BotSettingService extends ServiceBase {
                 foreignField: "_id",
                 as: "stratery"
             }
-        }, { $lookup: { from: "FieldProperties", localField: "fields.field_id", foreignField: "_id", as: "fields_info" } }, {
+        }, {
+            $lookup: {
+                from: "FieldProperties",
+                localField: "fields.field_id",
+                foreignField: "_id",
+                as: "fields_info"
+            }
+        }, {
             $project: {
                 symbol: {
                     $arrayElemAt: [
@@ -342,6 +385,23 @@ class BotSettingService extends ServiceBase {
             return new Response(true, {}, 'Something wrong happened');
         }
     }
+
+    async update_bot_status(id) {
+        try {
+            let result = this.model.findOne({
+                _id: id
+            });
+            if (result) {
+                return new Response(false, result);
+            } else {
+                return new Response(true, {}, 'Something wrong happened');
+            }
+        } catch (error) {
+            return new Response(true, error, "Error");
+        }
+    }
 }
 
-module.exports = { BotSettingService }
+module.exports = {
+    BotSettingService
+}
