@@ -298,10 +298,7 @@ class BotSettingService extends ServiceBase {
                 let rs_update_setting = await this.model.updateOne({
                     "strategy_id": body.strategy_id,
                     "symbol_id": body.symbol_id,
-                }, {
-                    fields: Object.values(dict_fields),
-                    bot_version: rs.version
-                })
+                }, { fields: Object.values(dict_fields), bot_version: rs.version })
 
                 if (!rs_update_setting) {
                     throw "lỗi không thể cập nhật version setting";
@@ -333,9 +330,7 @@ class BotSettingService extends ServiceBase {
 
     }
     async get_setting_by_account(id) {
-        let account_info = await AccountMt5.findOne({
-            "username": id
-        })
+        let account_info = await AccountMt5.findOne({ "username": id })
         let result = await this.model.aggregate([{
             $match: {
                 "strategy_id": account_info.stratery_id
@@ -413,6 +408,17 @@ class BotSettingService extends ServiceBase {
             }
         } catch (error) {
             return new Response(true, error, "Error");
+        }
+    }
+
+    async disable_module(id, module_name) {
+        try {
+            const result = await this.model.findById(id);
+            let disable_list = result.disable_list;
+            let index = disable_list.findIndex(v => v == module_name)
+            disable_list[index] = module_name;
+        } catch (error) {
+            return new Response(true, error);
         }
     }
 }

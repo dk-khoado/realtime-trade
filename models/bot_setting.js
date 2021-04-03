@@ -44,6 +44,10 @@ const BotSetting = new Schema({
     bot_status: {
         type: Boolean,
         default: false
+    },
+    disable_list:{
+        type: [String],
+        default: null
     }
 })
 

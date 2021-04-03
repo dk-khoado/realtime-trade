@@ -20,7 +20,9 @@ var BotControlController = require("../controllers/BotControlController").BotCon
 var BotControlService = require("../services/BotControllerService").BotControlService
 var BotControlModel = require("../models/bot_setting").BOT_CONTROL
 const botControl = new BotControlController(new BotControlService(BotControlModel))
-//router.use(auth)
+
+const core = require('../controllers/CoreController');
+router.use(auth)
 /* GET home page. */
 router.get('/accounts', accountMT5.get_all_account);
 router.post('/accounts', accountMT5.createAccount);
@@ -79,5 +81,9 @@ router.put("/create_config", botControl.createBotConfig);
 router.get("/getAllConfig", botControl.getAllConfig);
 router.post("/getConfigByID", botControl.get_bot_config_by_id);
 router.post("/update_bot_config", botControl.updateBotConfig);
+
+router.get("/api/core/:model_name", (req, res,next)=>{
+    core.getModelByName(req.params.model_name).getAll(req, res, next)
+});
 
 module.exports = router;

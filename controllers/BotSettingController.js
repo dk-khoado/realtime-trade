@@ -130,6 +130,15 @@ class BotSettingController extends Controller {
             res.send(response(error, false, 200, []))
         }
     }
+
+    async disable_module(req, res, next) {
+        try {
+            let result = await this.service.disable_module(req.body.module_name)
+            res.send(this.check_result_db(result))
+        } catch (error) {
+            res.send(response(error, false, 200, []))
+        }
+    }
 }
 
 module.exports = { BotSettingController }
