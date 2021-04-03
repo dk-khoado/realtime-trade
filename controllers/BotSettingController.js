@@ -121,6 +121,15 @@ class BotSettingController extends Controller {
             res.send(response(error, false, 200, []))
         }
     }
+
+    async update_bot_status(req, res, next) {
+        try {
+            let result = await this.service.update_bot_status(req.body.id);
+            res.send(this.check_result_db(result))
+        } catch (error) {
+            res.send(response(error, false, 200, []))
+        }
+    }
 }
 
 module.exports = { BotSettingController }

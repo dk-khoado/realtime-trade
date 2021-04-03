@@ -388,11 +388,26 @@ class BotSettingService extends ServiceBase {
 
     async update_bot_status(id) {
         try {
-            let result = this.model.findOne({
+            let result = await this.model.aggregate([{
+                $match: {
+                    "_id": mongoose.Types.ObjectId(id)
+                }
+            }, {
+                $project: {
+                    _id: 1,
+                    bot_status: 1
+                }
+            }]);
+
+            let update = this.model.findOneAndUpdate({
                 _id: id
+            }, {
+                $set: {
+                    bot_status: result[0].bot_status == true ? false : true
+                }
             });
-            if (result) {
-                return new Response(false, result);
+            if (update) {
+                return new Response(false, update);
             } else {
                 return new Response(true, {}, 'Something wrong happened');
             }
