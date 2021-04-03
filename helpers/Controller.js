@@ -8,7 +8,7 @@ module.exports = class {
         this.request = express.request
         this.response = express.response
         this.service = service;
-        autoBind(this);
+        autoBind(this);        
     }
     check_params(fields = [""], body) {
         console.log(fields)
@@ -62,7 +62,7 @@ module.exports = class {
     }
 
     async insert(req, res, next) {
-        try {
+        try {            
             let result = await this.service.insert(req.body)
             if (!result.isError()) {
                 res.send(response(null, true, 201, result.getData(), result.getMessage()))
