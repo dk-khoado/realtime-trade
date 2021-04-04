@@ -41,9 +41,19 @@ module.exports = class {
             return response(result.getData(), false, 201, null, result.getMessage())
         }
     }
+
     async getAll(req, res, next) {
         try {
             let result = await this.service.getAll({})
+            res.send(response(null, true, 200, result.getData(), result.getMessage()))
+        } catch (error) {
+            res.send(response(error, false, 200, [], result.getMessage()))
+        }
+    }
+
+    async core_getData(req, res, next) {
+        try {
+            let result = await this.service.core_getData({}, req.body.conditions)
             res.send(response(null, true, 200, result.getData(), result.getMessage()))
         } catch (error) {
             res.send(response(error, false, 200, [], result.getMessage()))
