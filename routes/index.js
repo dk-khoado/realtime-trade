@@ -22,7 +22,7 @@ var BotControlModel = require("../models/bot_setting").BOT_CONTROL
 const botControl = new BotControlController(new BotControlService(BotControlModel))
 
 const core = require('../controllers/CoreController');
-//router.use(auth)
+router.use(auth)
 /* GET home page. */
 router.get('/accounts', accountMT5.get_all_account);
 router.post('/accounts', accountMT5.createAccount);
