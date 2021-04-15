@@ -50,10 +50,6 @@ class ServiceBase {
                 conditions._id = mongoose.Types.ObjectId(conditions._id)
             }
         }
-        
-        query_aggregate.push({
-            $match: conditions
-        });
 
         try {
             if(Object.entries(query).length == 0 && conditions == null && conditions == undefined){
@@ -63,6 +59,16 @@ class ServiceBase {
                 .skip(skip)
                 .limit(limit);
             }else{
+                query_aggregate.push({
+                    $match: conditions
+                },{
+                    $sort: sortBy
+                },{
+                    $skip : skip 
+                },{
+                    $limit : limit 
+                });
+
                 items = await this.model.aggregate(query_aggregate);
             }
 
