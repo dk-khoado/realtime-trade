@@ -74,13 +74,15 @@ router.put("/bot-setting", botSetting.update_setting)
 
 router.get("/bot-running/:id", botSetting.get_setting_by_account)
 
+router.post("/setting-status", botSetting.update_bot_status)
+
 //Tạo bot config
 router.put("/create_config", botControl.createBotConfig);
 router.get("/getAllConfig", botControl.getAllConfig);
 router.post("/getConfigByID", botControl.get_bot_config_by_id);
 router.post("/update_bot_config", botControl.updateBotConfig);
 
-router.get("/api/core/:model_name", (req, res,next)=>{
+router.get("/api/core/:model_name/:id", (req, res,next)=>{
     core.getModelByName(req.params.model_name).getAll(req, res, next)
 });
 

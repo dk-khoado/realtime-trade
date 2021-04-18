@@ -37,10 +37,13 @@ const BotSetting = new Schema({
         min: 1,
         max: 240
     },
-    
     bot_version: {
         type: Number,
         default: 0.0
+    },
+    bot_status: {
+        type: Boolean,
+        default: false
     },
     disable_list:{
         type: [String],

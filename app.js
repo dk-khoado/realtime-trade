@@ -10,6 +10,7 @@ var indexRouter = require('./routes/index');
 var walletRouter = require('./routes/wallet');
 var ordersRouter = require('./routes/orders');
 var transRouter = require('./routes/transactions');
+var coreRouter = require('./routes/core');
 const io = require('socket.io')();
 
 const logging = require('./helpers/Logger').Logging
@@ -31,6 +32,7 @@ app.use('/', indexRouter);
 app.use('/order', ordersRouter);
 app.use('/account', walletRouter);
 app.use('/trans', transRouter);
+app.use('/core', coreRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

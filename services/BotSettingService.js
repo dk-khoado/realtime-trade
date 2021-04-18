@@ -12,7 +12,9 @@ class BotSettingService extends ServiceBase {
     }
     async create_Group(body) {
         try {
-            let item = await GruopModel.create({ name: body.name })
+            let item = await GruopModel.create({
+                name: body.name
+            })
             if (item) {
                 return new Response(false, item);
             } else {
@@ -33,7 +35,9 @@ class BotSettingService extends ServiceBase {
 
     async create_symbol(body) {
         try {
-            let item = await SymbolModel.create({ name: body.name })
+            let item = await SymbolModel.create({
+                name: body.name
+            })
             if (item) {
                 return new Response(false, item);
             } else {
@@ -66,8 +70,14 @@ class BotSettingService extends ServiceBase {
             let item = []
             for (let index = 0; index < body.items.length; index++) {
                 const element = body.items[index];
-                let result = await FieldPropertiesModel.findOneAndUpdate({ name: element.name }, element,
-                    { new: true, upsert: true, setDefaultsOnInsert: true, runValidators: true })
+                let result = await FieldPropertiesModel.findOneAndUpdate({
+                    name: element.name
+                }, element, {
+                    new: true,
+                    upsert: true,
+                    setDefaultsOnInsert: true,
+                    runValidators: true
+                })
                 item.push(result)
             }
             if (item) {
@@ -126,8 +136,7 @@ class BotSettingService extends ServiceBase {
                 "gruop_id": body.gruop_id,
                 "strategy_id": body.strategy_id,
                 "symbol_id": body.symbol_id,
-                "fields": [
-                ]
+                "fields": []
             }
             for (let index = 0; index < item.length; index++) {
                 const element = item[index];
@@ -168,7 +177,14 @@ class BotSettingService extends ServiceBase {
                 foreignField: "_id",
                 as: "stratery"
             }
-        }, { $lookup: { from: "FieldProperties", localField: "fields.field_id", foreignField: "_id", as: "fields_info" } }, {
+        }, {
+            $lookup: {
+                from: "FieldProperties",
+                localField: "fields.field_id",
+                foreignField: "_id",
+                as: "fields_info"
+            }
+        }, {
             $project: {
                 symbol: {
                     $arrayElemAt: [
@@ -212,7 +228,14 @@ class BotSettingService extends ServiceBase {
                 foreignField: "_id",
                 as: "stratery"
             }
-        }, { $lookup: { from: "FieldProperties", localField: "fields.field_id", foreignField: "_id", as: "fields_info" } }, {
+        }, {
+            $lookup: {
+                from: "FieldProperties",
+                localField: "fields.field_id",
+                foreignField: "_id",
+                as: "fields_info"
+            }
+        }, {
             $project: {
                 symbol: {
                     $arrayElemAt: [
@@ -243,7 +266,12 @@ class BotSettingService extends ServiceBase {
                 "strategy_id": body.strategy_id,
                 "symbol_id": body.symbol_id,
             })
-            let rs = await BotVersion.findOne({ $query: {}, $orderby: { _id: -1 } })
+            let rs = await BotVersion.findOne({
+                $query: {},
+                $orderby: {
+                    _id: -1
+                }
+            })
             let query = {
                 "$set": {}
             }
@@ -256,7 +284,10 @@ class BotSettingService extends ServiceBase {
                 let dict_fields = new Object();
                 for (let index = 0; index < fields.length; index++) {
                     let element = fields[index];
-                    dict_fields[element._id] = { field_id: element._id, value: element.default_value }
+                    dict_fields[element._id] = {
+                        field_id: element._id,
+                        value: element.default_value
+                    }
                 }
                 for (let i = 0; i < origin_data.length; i++) {
                     const element = origin_data[i];
@@ -318,7 +349,14 @@ class BotSettingService extends ServiceBase {
                 foreignField: "_id",
                 as: "stratery"
             }
-        }, { $lookup: { from: "FieldProperties", localField: "fields.field_id", foreignField: "_id", as: "fields_info" } }, {
+        }, {
+            $lookup: {
+                from: "FieldProperties",
+                localField: "fields.field_id",
+                foreignField: "_id",
+                as: "fields_info"
+            }
+        }, {
             $project: {
                 symbol: {
                     $arrayElemAt: [
@@ -342,6 +380,37 @@ class BotSettingService extends ServiceBase {
             return new Response(true, {}, 'Something wrong happened');
         }
     }
+
+    async update_bot_status(id) {
+        try {
+            let result = await this.model.aggregate([{
+                $match: {
+                    "_id": mongoose.Types.ObjectId(id)
+                }
+            }, {
+                $project: {
+                    _id: 1,
+                    bot_status: 1
+                }
+            }]);
+
+            let update = this.model.findOneAndUpdate({
+                _id: id
+            }, {
+                $set: {
+                    bot_status: result[0].bot_status == true ? false : true
+                }
+            });
+            if (update) {
+                return new Response(false, update);
+            } else {
+                return new Response(true, {}, 'Something wrong happened');
+            }
+        } catch (error) {
+            return new Response(true, error, "Error");
+        }
+    }
+
     async disable_module(id, module_name) {
         try {
             const result = await this.model.findById(id);
@@ -354,4 +423,6 @@ class BotSettingService extends ServiceBase {
     }
 }
 
-module.exports = { BotSettingService }
+module.exports = {
+    BotSettingService
+}
