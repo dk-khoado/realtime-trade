@@ -72,13 +72,21 @@ const FieldProperties = new Schema({
             type: String,
             required: true
         }
-    }]
+    }],
+    isDev: {
+        type: Boolean,
+        default: true,
+    },
+    disable: {
+        type: Boolean,
+        default: false,
+    }
 })
 
 const BotVersion = new Schema({
     version: {
         type: Number,
-        unique:true
+        unique: true
     },
     description: {
         type: String,
@@ -99,9 +107,9 @@ const BotReportError = new Schema({
         type: Number,
         default: 0
     },
-    bot_version_id:{
-        type:Schema.Types.ObjectId,
-        required:true
+    bot_version_id: {
+        type: Schema.Types.ObjectId,
+        required: true
     }
 })
 
