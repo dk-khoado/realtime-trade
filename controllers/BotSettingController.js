@@ -14,7 +14,7 @@ class BotSettingController extends Controller {
             let result = this.check_result_db(doc)
             let account = await AccountMt5.get_account_by_strategy_id(result.data_response.strategy_id)                                
             account.getData().forEach(element => {                
-                global.io.of("/setting/"+element.username).emit("update_config", result)                                                                             
+                global.io.of("/setting/"+element.username).emit("update_config", result)                                                    
             });
         });
     }
