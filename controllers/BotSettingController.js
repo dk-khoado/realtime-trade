@@ -1,20 +1,26 @@
 const Controller = require("../helpers/Controller");
 var response = require('../helpers/response');
-const { Gruop, FieldProperties } = require("../models/bot_stratery");
+// const { Gruop, FieldProperties } = require("../models/bot_stratery");
 const account_mt5 = require("../models/account_mt5").AccountMt5;
+const bot_setting = require("../models/bot_setting").BOT_SETTING;
 const AccountMT5Service = require("../services/AccountMT5Service").AccountMT5Service
+const BotSettingService = require("../services/BotSettingService").BotSettingService
+
 const AccountMt5 = new AccountMT5Service(account_mt5)
+const BotSetting = new BotSettingService(bot_setting)
 
 class BotSettingController extends Controller {
     constructor(service) {
         super(service);
+    }
+    start_stream() {
         const changeStream = this.service.model.watch();
         changeStream.on('change', async (change) => {
-            let doc = await this.service.get_setting_byID(change.documentKey._id)         
+            let doc = await this.service.get_setting_byID(change.documentKey._id)
             let result = this.check_result_db(doc)
-            let account = await AccountMt5.get_account_by_strategy_id(result.data_response.strategy_id)                                
-            account.getData().forEach(element => {                
-                global.io.of("/setting/"+element.username).emit("update_config", result)                                                    
+            let account = await AccountMt5.get_account_by_strategy_id(result.data_response.strategy_id)
+            account.getData().forEach(element => {
+                global.io.of("/setting/" + element.username).emit("update_config", result)
             });
         });
     }
@@ -139,6 +145,30 @@ class BotSettingController extends Controller {
             res.send(response(error, false, 200, []))
         }
     }
+
+    async copy_setting_to(req, res, next) {
+        try {
+            let result = await this.service.copy_config(req.body.strategy_id)
+            res.send(this.check_result_db(result))
+        } catch (error) {
+            res.send(response(error, false, 200, []))
+        }
+    }
+    
+    async import_setting(req, res, next) {
+        try {
+            res.send(response(null, true, 200, []))
+        } catch (error) {
+            res.send(response(error, false, 200, []))
+        }
+    }
+    async export_setting(req, res, next) {
+        try {
+            res.send(response(null, true, 200, []))
+        } catch (error) {
+            res.send(response(error, false, 200, []))
+        }
+    }
 }
 
-module.exports = { BotSettingController }
+module.exports = { BotSettingController, BotSettingCtl: new BotSettingController(BotSetting) }
