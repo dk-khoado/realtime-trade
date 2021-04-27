@@ -11,7 +11,7 @@ module.exports = function (errors, is_success, status_code, data_response, messa
     res.errors = errors;
     res.is_success = is_success;
     res.status_code = status_code;
-    res.data_response = data_response;
-    res.message = message;
+    res.data_response = data_response ? data_response: null;
+    res.message = message ? message : "";
     return res;
 }

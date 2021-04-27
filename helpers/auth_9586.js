@@ -16,9 +16,9 @@ module.exports = async function (req, res, next) {
         if (result.data.is_success == true) {          
             next()
         } else {
-            throw result.data
+            throw result.data.message
         }
     } catch (error) {
-        return res.send(response(error, false, 401, "you don`t have permission!"))
+        return res.send(response(error, false, 401, null,"you don`t have permission!"))
     }
 }
