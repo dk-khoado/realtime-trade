@@ -1,6 +1,9 @@
 const ServiceBase = require("../helpers/ServicesBase").ServiceBase
 const Response = require("../helpers/SevicesResponse")
 const mongoose = require("mongoose")
+const { BotControl, BotStatus, ActiveKey } = require("../models/bot_manager")
+const { v4: uuidv4 } = require('uuid');
+
 class BotControlService extends ServiceBase {
     constructor(model) {
         super(model);
@@ -61,7 +64,7 @@ class BotControlService extends ServiceBase {
                 foreignField: "_id",
                 as: "account"
             }
-        },{
+        }, {
             $project: {
                 symbol: {
                     $arrayElemAt: [
@@ -123,6 +126,31 @@ class BotControlService extends ServiceBase {
             }
         } catch (error) {
             return new Response(true, error, "Error");
+        }
+    }
+
+    async updateStatus(active_key, data) {
+        try {            
+            let result = await BotStatus.updateOne({ bot_active_key: active_key }, data)
+            if (result) {
+                return new Response(false, result, "Update status success !!!");
+            } else {
+                return new Response(true, [], 'Something wrong happened');
+            }
+        } catch (error) {
+
+        }
+    }
+    async createActiveKey(active_key, data) {
+        try {            
+            let result = await ActiveKey.updateOne({ bot_active_key: active_key }, data)
+            if (result) {
+                return new Response(false, result, "Update status success !!!");
+            } else {
+                return new Response(true, [], 'Something wrong happened');
+            }
+        } catch (error) {
+
         }
     }
 }

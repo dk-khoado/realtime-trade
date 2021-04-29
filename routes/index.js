@@ -84,4 +84,5 @@ router.post("/update_bot_config", botControl.updateBotConfig);
 
 router.post("/copy-config", botSetting.copy_setting_to);
 
+router.post("/bot-controller/update-status", botControl.updateBotStatus)
 module.exports = router;

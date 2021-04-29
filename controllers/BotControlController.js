@@ -59,6 +59,31 @@ class BotControlController extends Controller {
             res.send(response(error, false, 200, []))
         }
     }
+
+    async updateBotStatus(req = this.request, res = this.response, next) {
+        try {
+            let active_key = null
+            if (req.query.active_key) {
+                active_key = req.query.active_key
+            }
+            let result = await this.service.updateStatus(active_key, req.body)
+            res.send(this.check_result_db(result))
+        } catch (error) {
+            res.send(response(error, false, 200, []))
+        }
+    }
+    async createActiveKey(req = this.request, res = this.response, next) {
+        try {
+            let active_key = null
+            if (req.query.active_key) {
+                active_key = req.query.active_key
+            }
+            let result = await this.service.updateStatus(active_key, req.body)
+            res.send(this.check_result_db(result))
+        } catch (error) {
+            res.send(response(error, false, 200, []))
+        }
+    }
 }
 
 module.exports = { BotControlController }
