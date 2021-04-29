@@ -5,7 +5,7 @@ const Wallet = new Schema({
     user_id: {
         type: Schema.Types.ObjectId,
         required: true,
-        unique: true
+        unique: true,
     },
     email: {
         type: String,
