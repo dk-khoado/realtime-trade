@@ -1,7 +1,7 @@
 const ServiceBase = require("../helpers/ServicesBase").ServiceBase
 const Response = require("../helpers/SevicesResponse")
 const TransactionModel = require("../models/transaction_system").System;
-const TransactionService = require("../services/TransactionService").TransactionService
+// const TransactionService = require("../services/TransactionService").TransactionService
 const mongoose = require("mongoose")
 class TransactionMasterService extends ServiceBase {
     constructor(model) {

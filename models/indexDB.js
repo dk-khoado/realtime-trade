@@ -35,7 +35,7 @@ mongoose.set("debug", (collectionName, method, query, doc) => {
 // mongoose.connect('mongodb://localhost/test');
 // mongoose.connect('mongodb://luanangame:Khoa!123@den1.mongo1.gear.host:27001/luanangame');
 let options = {
-
+  poolSize: 100
 }
 if (!process.env.MONGODB_ADDON_URI) {
   mongoose.connect(`mongodb://${config.db.username}:${config.db.password}@${config.db.host}:${config.db.port}/${config.db.db_name}`, options)

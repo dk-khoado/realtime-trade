@@ -421,6 +421,20 @@ class BotSettingService extends ServiceBase {
             return new Response(true, error);
         }
     }
+
+    async copy_config(strategy_id, strategy_new_id) {
+        try {
+            let pro = { symbol_id: 1, fields: 1 }
+            let strategy = await this.model.findOne({ strategy_id }, pro);
+            let clone = []
+            for (let iterator of strategy.fields) {                
+                clone.push({ field_id: iterator.field_id, value: iterator.value });
+            }
+            return new Response(false, clone);
+        } catch (error) {
+            return new Response(true, error);
+        }
+    }
 }
 
 module.exports = {
