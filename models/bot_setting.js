@@ -10,13 +10,16 @@ const BotSetting = new Schema({
     fields: [
         {
             field_id: {
-                type: Schema.Types.ObjectId,
-                required: true,
-                index: true
-            },
+                type: Schema.Types.ObjectId,                
+                default:null
+            },            
             value: {
                 type: String,
                 required: true
+            },
+            field_name: {
+                type: String,
+                default:null
             },
         }
     ],
