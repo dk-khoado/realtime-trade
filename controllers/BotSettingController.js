@@ -112,6 +112,7 @@ class BotSettingController extends Controller {
 
     async update_setting(req, res, next) {
         try {
+
             let result = await this.service.update_setting(req.body)
             res.send(this.check_result_db(result))
         } catch (error) {

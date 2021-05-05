@@ -266,35 +266,42 @@ class BotSettingService extends ServiceBase {
                 "strategy_id": body.strategy_id,
                 "symbol_id": body.symbol_id,
             })
-            let rs = await BotVersion.findOne({
-                $query: {},
-                $orderby: {
-                    _id: -1
-                }
-            })
+            let rs = await BotVersion.findOne({}, {}, { sort: { "_id": -1 } })
             let query = {
                 "$set": {}
             }
             let options = {
                 arrayFilters: []
             }
-            if (item.bot_version < rs.version) {
+            if (item.bot_version <= rs.version) {
                 let fields = await FieldPropertiesModel.find();
                 let origin_data = item.fields;
                 let dict_fields = new Object();
+                //chuẩn bị dữ liệu của fields
                 for (let index = 0; index < fields.length; index++) {
                     let element = fields[index];
                     dict_fields[element._id] = {
                         field_id: element._id,
-                        value: element.default_value
+                        value: element.default_value,
+                        field_name: element.name
+                    }
+                    dict_fields[element.name] = {
+                        field_id: element._id,
+                        value: element.default_value,
+                        field_name: element.name
                     }
                 }
+                //chuẩn bị dự liêu cập nhật lại dữ liệu của field
                 for (let i = 0; i < origin_data.length; i++) {
-                    const element = origin_data[i];
-                    if (dict_fields[element.field_id]) {
-                        dict_fields[element.field_id].value = element.value
+                    const element = origin_data[i];                    
+                    if (element.field_name) {
+                        dict_fields[element.field_name].value = element.value
+                        dict_fields[element.field_id] = undefined
+                    } else {
+                        dict_fields[element.field_id] = undefined
                     }
                 }
+                console.log(dict_fields)
                 let rs_update_setting = await this.model.updateOne({
                     "strategy_id": body.strategy_id,
                     "symbol_id": body.symbol_id,
@@ -427,7 +434,7 @@ class BotSettingService extends ServiceBase {
             let pro = { symbol_id: 1, fields: 1 }
             let strategy = await this.model.findOne({ strategy_id }, pro);
             let clone = []
-            for (let iterator of strategy.fields) {                
+            for (let iterator of strategy.fields) {
                 clone.push({ field_id: iterator.field_id, value: iterator.value });
             }
             return new Response(false, clone);
