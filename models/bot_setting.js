@@ -5,33 +5,30 @@ const BotSetting = new Schema({
     gruop_id: {
         type: Schema.Types.ObjectId,
         default: null,
-        index: true
     },
     fields: [
         {
             field_id: {
-                type: Schema.Types.ObjectId,                
-                default:null
-            },            
+                type: Schema.Types.ObjectId,
+                default: null
+            },
             value: {
                 type: String,
                 required: true
             },
             field_name: {
                 type: String,
-                default:null
+                default: null
             },
         }
     ],
     strategy_id: {
         type: Schema.Types.ObjectId,
         required: true,
-        index: true
     },
     symbol_id: {
         type: Schema.Types.ObjectId,
         required: true,
-        index: true
     },
     time_frames: {
         type: Number,
@@ -53,8 +50,6 @@ const BotSetting = new Schema({
         default: null
     }
 })
-
-
 
 module.exports = {
     BOT_SETTING: mongoose.model("BotSetting", BotSetting, "BotSetting")

@@ -42,7 +42,7 @@ app.use(function (req, res, next) {
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
-  console.log(req)
+  console.log(err)
   res.locals.message = "ddos con cặc nè bạn ơi";
   res.locals.error = "Địt mẹ bạn :))";
 

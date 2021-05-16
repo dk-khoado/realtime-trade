@@ -9,6 +9,7 @@ const mongoose = require("mongoose")
 class BotSettingService extends ServiceBase {
     constructor(model) {
         super(model);
+        
     }
     async create_Group(body) {
         try {
@@ -277,6 +278,7 @@ class BotSettingService extends ServiceBase {
                 let fields = await FieldPropertiesModel.find();
                 let origin_data = item.fields;
                 let dict_fields = new Object();
+                let result_data = new Object();
                 //chuẩn bị dữ liệu của fields
                 for (let index = 0; index < fields.length; index++) {
                     let element = fields[index];
@@ -285,27 +287,29 @@ class BotSettingService extends ServiceBase {
                         value: element.default_value,
                         field_name: element.name
                     }
-                    dict_fields[element.name] = {
+                    result_data[element.name] = {
                         field_id: element._id,
                         value: element.default_value,
                         field_name: element.name
                     }
                 }
-                //chuẩn bị dự liêu cập nhật lại dữ liệu của field
+                //chuẩn bị dự liêu cập nhật lại dữ liệu của field    
                 for (let i = 0; i < origin_data.length; i++) {
-                    const element = origin_data[i];                    
-                    if (element.field_name) {
-                        dict_fields[element.field_name].value = element.value
-                        dict_fields[element.field_id] = undefined
+                    const element = origin_data[i];
+                    let { field_name } = element
+                    if (!field_name) {
+                        dict_fields[element.field_id].value = element.value
+                        result_data[dict_fields[element.field_id].field_name].value = element.value
                     } else {
-                        dict_fields[element.field_id] = undefined
+                        result_data[field_name].value = element.value
                     }
+
                 }
-                console.log(dict_fields)
+
                 let rs_update_setting = await this.model.updateOne({
                     "strategy_id": body.strategy_id,
                     "symbol_id": body.symbol_id,
-                }, { fields: Object.values(dict_fields), bot_version: rs.version })
+                }, { fields: Object.values(result_data), bot_version: rs.version })
 
                 if (!rs_update_setting) {
                     throw "lỗi không thể cập nhật version setting";
@@ -314,9 +318,14 @@ class BotSettingService extends ServiceBase {
             // return new Response(false, result);
             for (let index = 0; index < body.fields.length; index++) {
                 const element = body.fields[index];
+                let { field_name } = element
                 let elt = `index${index}`
                 let obj_option = {}
-                obj_option[`${elt}.field_id`] = element.field_id
+                if (field_name) {
+                    obj_option[`${elt}.field_name`] = element.field_name
+                } else {
+                    obj_option[`${elt}.field_id`] = element.field_id
+                }
                 query.$set[`fields.$[${elt}].value`] = element.value
                 options.arrayFilters.push(obj_option)
             }

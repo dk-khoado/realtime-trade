@@ -14,7 +14,7 @@ module.exports = class {
         console.log(fields)
         fields.forEach(element => {
             if (!body[element]) {
-                throw `There is no field ${element}`
+                throw {message:`There is no field ${element}`}
             }
         });
     }

@@ -18,7 +18,7 @@ const BotStrategy = new BotStrategyController(new BotStrategyService(BotStrategy
 
 var BotControlController = require("../controllers/BotControlController").BotControlController
 var BotControlService = require("../services/BotControllerService").BotControlService
-var BotControlModel = require("../models/bot_setting").BOT_CONTROL
+var BotControlModel = require("../models/bot_manager").BotControl
 const botControl = new BotControlController(new BotControlService(BotControlModel))
 
 router.use(auth)
@@ -76,13 +76,11 @@ router.get("/bot-running/:id", botSetting.get_setting_by_account)
 
 router.post("/setting-status", botSetting.update_bot_status)
 
-//Tạo bot config
-router.put("/create_config", botControl.createBotConfig);
-router.get("/getAllConfig", botControl.getAllConfig);
-router.post("/getConfigByID", botControl.get_bot_config_by_id);
-router.post("/update_bot_config", botControl.updateBotConfig);
-
 router.post("/copy-config", botSetting.copy_setting_to);
 
+//Tạo bot config
 router.post("/bot-controller/update-status", botControl.updateBotStatus)
+router.post("/bot-controller/disable-symbol", botControl.disableSymbol)
+router.post("/bot-controller", botControl.createBotController)
+
 module.exports = router;

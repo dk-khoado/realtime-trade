@@ -4,6 +4,7 @@ const Response = require("../helpers/SevicesResponse")
 class CoreService extends ServiceBase {
     constructor(model) {
         super(model);
+        
     }
 }
 

@@ -9,5 +9,7 @@ class Core extends Controller {
     }
 }
 module.exports = {
-    getModelByName :(model_name) => new Core(new Service(mongoose.model(model_name)))
+    getModelByName: (model_name) => {
+        return new Core(new Service(mongoose.model(model_name)))
+    }
 }

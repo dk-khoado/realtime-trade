@@ -46,6 +46,7 @@ const BotStatus = new Schema({
 })
 const BotControl = new Schema({
     modules_disable: [{ type: String }],
+    symbols_disable: [{ type: String }],
     turn_on: {
         type: Boolean,
         default: true
@@ -53,6 +54,13 @@ const BotControl = new Schema({
     bot_status_id: {
         type: Schema.Types.ObjectId,
         default: null
+    },
+    link_account: {
+        type: String,
+        default: null,
+        unique:true,
+        trim:true,
+        required:true
     },
 })
 const TypeOrders = new Schema({
