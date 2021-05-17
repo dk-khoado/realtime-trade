@@ -4,7 +4,10 @@ const { body } = require('express-validator')
 class BotControlController extends Controller {
     constructor(service) {
         super(service);
-
+        const changeStream = this.service.model.watch();
+        changeStream.on('change', async (change) => {
+            console.log("[a]",change)
+        });
     }
 
     async updateBotStatus(req = this.request, res = this.response, next) {
@@ -35,9 +38,9 @@ class BotControlController extends Controller {
     async disableSymbol(req = this.request, res = this.response, next) {
         try {
             let link_account = null
-            this.check_params(["link_account","symbol_name"], req.body)
+            this.check_params(["link_account","symbol_name", "enable"], req.body)
             link_account =  req.body.link_account
-            let result = await this.service.disableSymbol(link_account, req.body.symbol_name)
+            let result = await this.service.disableSymbol(link_account, req.body.symbol_name, req.body.enable)
             res.send(this.check_result_db(result))
         } catch (error) {
             res.send(response(error, false, 200, []))

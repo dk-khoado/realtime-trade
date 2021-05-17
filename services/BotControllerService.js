@@ -34,18 +34,22 @@ class BotControlService extends ServiceBase {
         }
     }
 
-    async disableSymbol(link_account, symbol_name) {
+    async disableSymbol(link_account, symbol_name, turn_off = false) {
         try {
+            let updateQuery = { $addToSet: { "symbols_disable": symbol_name } }
+            if (turn_off) {
+                updateQuery  = { $pull: { "symbols_disable": symbol_name } }
+            }
             let result = await this.model.updateOne({ link_account: link_account },
-                { $set: { link_account: link_account }, $push: { symbols_disable: symbol_name } },
-                { upsert: true, new: true, setDefaultsOnInsert: true, runValidators: true })
+                updateQuery,
+                { setDefaultsOnInsert: true, runValidators: true })
             if (result) {
                 return new Response(false, result, `Update success`);
             } else {
                 return new Response(true, [], 'Something wrong happened');
             }
         } catch (error) {
-            return new Response(true, error, 'Something wrong happened');
+            return new Response(true, error, 'Mongo error');
         }
     }
 

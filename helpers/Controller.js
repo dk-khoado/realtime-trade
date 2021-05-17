@@ -13,15 +13,16 @@ module.exports = class {
     check_params(fields = [""], body) {
         console.log(fields)
         fields.forEach(element => {
-            if (!body[element]) {
+            if (!body[element] == undefined) {
                 throw {message:`There is no field ${element}`}
             }
         });
     }
     static check_params(fields = [""], body) {
+        console.log(fields)
         fields.forEach(element => {
-            if (!body[element]) {
-                throw `There is no field ${element}`
+            if (!body[element] == undefined) {
+                throw {message:`There is no field ${element}`}
             }
         });
     }
